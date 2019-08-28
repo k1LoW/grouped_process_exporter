@@ -1,0 +1,44 @@
+before:
+  hooks:
+    - go mod download
+    - go mod tidy
+builds:
+-
+  id: cpe-linux
+  env:
+  - CGO_ENABLED=0
+  goos:
+    - linux
+  goarch:
+    - amd64
+  ldflags:
+    - -s -w -X github.com/k1LoW/cgrouped_process_exporter.version={{.Version}} -X github.com/k1LoW/cgrouped_process_exporter.commit={{.FullCommit}} -X github.com/k1LoW/cgrouped_process_exporter.date={{.Date}} -X github.com/k1LoW/cgrouped_process_exporter/version.Version={{.Version}}
+archives:
+-
+  id: cpe-archive
+  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+  files:
+    - CREDITS
+    - README.md
+    - CHANGELOG.md
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Version }}-next"
+changelog:
+  skip: true
+nfpms:
+  -
+    id: cpe-nfpms
+    name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    builds:
+    - cpe-linux
+    homepage: https://github.com/k1LoW/cgrouped_process_exporter
+    maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
+    description: cgrouped process exporter
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    epoch: 1
