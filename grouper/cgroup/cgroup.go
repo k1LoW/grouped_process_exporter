@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/k1LoW/grouped_process_exporter/grouped_procs"
+	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 )
 
 // Subsystems cgroups subsystems list
@@ -29,13 +29,19 @@ var Subsystems = []string{
 	"rdma",
 }
 
-func ListCgroupedProcs(fsPath string) (map[string]*grouped_procs.GroupedProcs, error) {
-	gpMap := make(map[string]*grouped_procs.GroupedProcs)
+type Cgroup struct {
+	fsPath string
+}
 
+func (c *Cgroup) Name() string {
+	return "cgroup"
+}
+
+func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[grouped_proc.MetricKey]bool) error {
 	wg := &sync.WaitGroup{}
 
 	for _, s := range Subsystems {
-		searchDir := filepath.Clean(filepath.Join(fsPath, s))
+		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
 
 		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
 			if err != nil {
@@ -57,8 +63,7 @@ func ListCgroupedProcs(fsPath string) (map[string]*grouped_procs.GroupedProcs, e
 						_ = f.Close()
 						return nil
 					}
-					gpMap[cPath] = new(grouped_procs.GroupedProcs)
-					gpMap[cPath].Path = cPath
+					gpMap[cPath] = grouped_proc.NewGroupedProc(enabled)
 					reader := bufio.NewReaderSize(f, 1028)
 					for {
 						line, _, err := reader.ReadLine()
@@ -75,9 +80,9 @@ func ListCgroupedProcs(fsPath string) (map[string]*grouped_procs.GroupedProcs, e
 						}
 
 						wg.Add(1)
-						go func(wg *sync.WaitGroup, pid int, g *grouped_procs.GroupedProcs) {
-							defer wg.Done()
+						go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
 							_ = g.AppendPid(pid)
+							wg.Done()
 						}(wg, pid, gpMap[cPath])
 					}
 				}
@@ -86,10 +91,17 @@ func ListCgroupedProcs(fsPath string) (map[string]*grouped_procs.GroupedProcs, e
 			return nil
 		})
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
 
 	wg.Wait()
-	return gpMap, nil
+	return nil
+}
+
+// NewCgroup ...
+func NewCgroup(fsPath string) *Cgroup {
+	return &Cgroup{
+		fsPath: fsPath,
+	}
 }

@@ -4,7 +4,7 @@ before:
     - go mod tidy
 builds:
 -
-  id: cpe-linux
+  id: gpe-linux
   env:
   - CGO_ENABLED=0
   goos:
@@ -15,7 +15,7 @@ builds:
     - -s -w -X github.com/k1LoW/grouped_process_exporter.version={{.Version}} -X github.com/k1LoW/grouped_process_exporter.commit={{.FullCommit}} -X github.com/k1LoW/grouped_process_exporter.date={{.Date}} -X github.com/k1LoW/grouped_process_exporter/version.Version={{.Version}}
 archives:
 -
-  id: cpe-archive
+  id: gpe-archive
   name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   files:
     - CREDITS
@@ -29,10 +29,10 @@ changelog:
   skip: true
 nfpms:
   -
-    id: cpe-nfpms
+    id: gpe-nfpms
     name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
-    - cpe-linux
+    - gpe-linux
     homepage: https://github.com/k1LoW/grouped_process_exporter
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
     description: Exporter for grouped process

@@ -22,49 +22,56 @@ THE SOFTWARE.
 package cmd
 
 import (
-  "fmt"
-  "os"
-  "github.com/spf13/cobra"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
 
+	"github.com/k1LoW/grouped_process_exporter/collector"
+	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
+	"github.com/k1LoW/grouped_process_exporter/grouper/cgroup"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/spf13/cobra"
 )
 
-
+var (
+	collectIO bool
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-  Use:   "grouped_process_exporter",
-  Short: "A brief description of your application",
-  Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-  // Uncomment the following line if your bare application
-  // has an action associated with it:
-  //	Run: func(cmd *cobra.Command, args []string) { },
+	Use:   "grouped_process_exporter",
+	Short: "Exporter for grouped process",
+	Long:  `Exporter for grouped process.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		os.Exit(runRoot(args, "/sys/fs/cgroup", collectIO))
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+func runRoot(args []string, fsPath string, collectIO bool) int {
+	cgrp := cgroup.NewCgroup(fsPath)
+
+	collector, err := collector.NewGroupedProcCollector(cgrp)
+	if err != nil {
+		return 1
+	}
+	if collectIO {
+		collector.EnableMetric(grouped_proc.ProcIO)
+	}
+	prometheus.MustRegister(collector)
+	http.Handle("/metrics", promhttp.Handler())
+	log.Fatal(http.ListenAndServe(":8000", nil))
+	return 0
+}
+
 func Execute() {
-  if err := rootCmd.Execute(); err != nil {
-    fmt.Println(err)
-    os.Exit(1)
-  }
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
 func init() {
-  // Here you will define your flags and configuration settings.
-  // Cobra supports persistent flags, which, if defined here,
-  // will be global for your application.
-
-  // rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.grouped_process_exporter.yaml)")
-
-
-  // Cobra also supports local flags, which will only run
-  // when this action is called directly.
-  rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "collect proc io")
 }
-
-
