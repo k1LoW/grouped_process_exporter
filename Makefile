@@ -1,4 +1,4 @@
-PKG = github.com/k1LoW/cgrouped_process_exporter
+PKG = github.com/k1LoW/grouped_process_exporter
 COMMIT = $$(git describe --tags --always)
 OSNAME=${shell uname -s}
 ifeq ($(OSNAME),Darwin)

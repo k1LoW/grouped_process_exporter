@@ -12,7 +12,7 @@ builds:
   goarch:
     - amd64
   ldflags:
-    - -s -w -X github.com/k1LoW/cgrouped_process_exporter.version={{.Version}} -X github.com/k1LoW/cgrouped_process_exporter.commit={{.FullCommit}} -X github.com/k1LoW/cgrouped_process_exporter.date={{.Date}} -X github.com/k1LoW/cgrouped_process_exporter/version.Version={{.Version}}
+    - -s -w -X github.com/k1LoW/grouped_process_exporter.version={{.Version}} -X github.com/k1LoW/grouped_process_exporter.commit={{.FullCommit}} -X github.com/k1LoW/grouped_process_exporter.date={{.Date}} -X github.com/k1LoW/grouped_process_exporter/version.Version={{.Version}}
 archives:
 -
   id: cpe-archive
@@ -33,9 +33,9 @@ nfpms:
     name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
     - cpe-linux
-    homepage: https://github.com/k1LoW/cgrouped_process_exporter
+    homepage: https://github.com/k1LoW/grouped_process_exporter
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
-    description: cgrouped process exporter
+    description: Exporter for grouped process
     license: MIT
     formats:
       - deb

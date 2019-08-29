@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/k1LoW/cgrouped_process_exporter/cmd"
+import "github.com/k1LoW/grouped_process_exporter/cmd"
 
 func main() {
   cmd.Execute()

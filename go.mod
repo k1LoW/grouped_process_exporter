@@ -1,4 +1,4 @@
-module github.com/k1LoW/cgrouped_process_exporter
+module github.com/k1LoW/grouped_process_exporter
 
 go 1.12
 
