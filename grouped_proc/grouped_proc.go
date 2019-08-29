@@ -24,7 +24,7 @@ func DefaultEnabledMetrics() map[MetricKey]bool {
 	for _, k := range MetricKeys {
 		enabled[k] = false
 	}
-	enabled[ProcCount] = true
+	enabled[ProcProcs] = true
 	return enabled
 }
 
