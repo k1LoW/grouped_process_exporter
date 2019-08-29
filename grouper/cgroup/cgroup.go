@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
+	"github.com/k1LoW/grouped_process_exporter/metric"
 )
 
 // Subsystems cgroups subsystems list
@@ -37,7 +38,7 @@ func (c *Cgroup) Name() string {
 	return "cgroup"
 }
 
-func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[grouped_proc.MetricKey]bool) error {
+func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[metric.MetricKey]bool) error {
 	wg := &sync.WaitGroup{}
 
 	for _, s := range Subsystems {

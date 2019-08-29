@@ -3,28 +3,29 @@ package grouped_proc
 import (
 	"sync"
 
+	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/procfs"
 )
 
 type GroupedProc struct {
 	sync.Mutex
-	Metrics map[MetricKey]Metric
-	Enabled map[MetricKey]bool
+	Metrics map[metric.MetricKey]metric.Metric
+	Enabled map[metric.MetricKey]bool
 }
 
-func NewGroupedProc(enabled map[MetricKey]bool) *GroupedProc {
+func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	return &GroupedProc{
 		Enabled: enabled,
-		Metrics: AvairableMetrics(),
+		Metrics: metric.AvairableMetrics(),
 	}
 }
 
-func DefaultEnabledMetrics() map[MetricKey]bool {
-	enabled := make(map[MetricKey]bool)
-	for _, k := range MetricKeys {
+func DefaultEnabledMetrics() map[metric.MetricKey]bool {
+	enabled := make(map[metric.MetricKey]bool)
+	for _, k := range metric.MetricKeys {
 		enabled[k] = false
 	}
-	enabled[ProcProcs] = true
+	enabled[metric.ProcProcs] = true
 	return enabled
 }
 
@@ -34,7 +35,7 @@ func (g *GroupedProc) AppendPid(pid int) error {
 		return err
 	}
 
-	for _, k := range MetricKeys {
+	for _, k := range metric.MetricKeys {
 		if g.Enabled[k] {
 			g.Lock()
 			err := g.Metrics[k].CollectFromProc(proc)

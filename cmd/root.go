@@ -28,8 +28,8 @@ import (
 	"os"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
-	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/grouper/cgroup"
+	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
@@ -57,7 +57,7 @@ func runRoot(args []string, fsPath string, collectIO bool) int {
 		return 1
 	}
 	if collectIO {
-		collector.EnableMetric(grouped_proc.ProcIO)
+		collector.EnableMetric(metric.ProcIO)
 	}
 	prometheus.MustRegister(collector)
 	http.Handle("/metrics", promhttp.Handler())

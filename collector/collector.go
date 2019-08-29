@@ -5,19 +5,20 @@ import (
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
+	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 type GroupedProcCollector struct {
 	GroupedProcs map[string]*grouped_proc.GroupedProc
-	Metrics      map[grouped_proc.MetricKey]grouped_proc.Metric
-	Enabled      map[grouped_proc.MetricKey]bool
+	Metrics      map[metric.MetricKey]metric.Metric
+	Enabled      map[metric.MetricKey]bool
 	Grouper      grouper.Grouper
 	descs        map[string]*prometheus.Desc
 }
 
 func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
-	for _, key := range grouped_proc.MetricKeys {
+	for _, key := range metric.MetricKeys {
 		if c.Enabled[key] {
 			descs := c.Metrics[key].Describe()
 			for name, desc := range descs {
@@ -50,11 +51,11 @@ func (c *GroupedProcCollector) Debug() {
 	}
 }
 
-func (c *GroupedProcCollector) EnableMetric(metric grouped_proc.MetricKey) {
+func (c *GroupedProcCollector) EnableMetric(metric metric.MetricKey) {
 	c.Enabled[metric] = true
 }
 
-func (c *GroupedProcCollector) DisableMetric(metric grouped_proc.MetricKey) {
+func (c *GroupedProcCollector) DisableMetric(metric metric.MetricKey) {
 	c.Enabled[metric] = false
 }
 
@@ -62,7 +63,7 @@ func (c *GroupedProcCollector) DisableMetric(metric grouped_proc.MetricKey) {
 func NewGroupedProcCollector(g grouper.Grouper) (*GroupedProcCollector, error) {
 	return &GroupedProcCollector{
 		GroupedProcs: make(map[string]*grouped_proc.GroupedProc),
-		Metrics:      grouped_proc.AvairableMetrics(),
+		Metrics:      metric.AvairableMetrics(),
 		Enabled:      grouped_proc.DefaultEnabledMetrics(),
 		Grouper:      g,
 		descs:        make(map[string]*prometheus.Desc),
