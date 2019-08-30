@@ -2,11 +2,11 @@
 
 ## Supported grouping
 
-- control group v1 ( `cgroup` )
+- control group v1 ( `cgroup` , default )
 
-## Metrics
+## Avairable Metrics
 
-### Amount of grouped procs ( default )
+### Amount of grouped procs ( default on )
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -24,3 +24,7 @@
 | grouped_process_io_write_bytes | Gauge | Grouped /proc/[PID]/io.write_bytes |
 | grouped_process_io_cancelled_write_bytes | Gauge | Grouped /proc/[PID]/io.cancelled_write_bytes |
 
+
+## TODO
+
+- [ ] Logging

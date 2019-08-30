@@ -22,12 +22,14 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
+	"github.com/k1LoW/grouped_process_exporter/grouper"
 	"github.com/k1LoW/grouped_process_exporter/grouper/cgroup"
 	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
@@ -36,6 +38,9 @@ import (
 )
 
 var (
+	address   string
+	endpoint  string
+	group     string
 	collectIO bool
 )
 
@@ -45,24 +50,35 @@ var rootCmd = &cobra.Command{
 	Short: "Exporter for grouped process",
 	Long:  `Exporter for grouped process.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		os.Exit(runRoot(args, "/sys/fs/cgroup", collectIO))
+		status, err := runRoot(args, address, endpoint, group, collectIO)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		}
+		os.Exit(status)
 	},
 }
 
-func runRoot(args []string, fsPath string, collectIO bool) int {
-	cgrp := cgroup.NewCgroup(fsPath)
+func runRoot(args []string, address, endpoint, group string, collectIO bool) (int, error) {
+	var g grouper.Grouper
+	switch group {
+	case "cgroup":
+		fsPath := "/sys/fs/cgroup"
+		g = cgroup.NewCgroup(fsPath)
+	default:
+		return 1, errors.New("invalid grouping type")
+	}
 
-	collector, err := collector.NewGroupedProcCollector(cgrp)
+	collector, err := collector.NewGroupedProcCollector(g)
 	if err != nil {
-		return 1
+		return 1, err
 	}
 	if collectIO {
 		collector.EnableMetric(metric.ProcIO)
 	}
 	prometheus.MustRegister(collector)
-	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(":8000", nil))
-	return 0
+	http.Handle(endpoint, promhttp.Handler())
+	log.Fatal(http.ListenAndServe(address, nil))
+	return 0, nil
 }
 
 func Execute() {
@@ -73,5 +89,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "collect proc io")
+	rootCmd.Flags().StringVarP(&address, "telemetry.address", "", ":9629", "Address on which to expose metrics.")
+	rootCmd.Flags().StringVarP(&endpoint, "telemetry.endpoint", "", "/metrics", "Path under which to expose metrics.")
+	rootCmd.Flags().StringVarP(&group, "group.type", "", "cgroup", "Grouping type.")
+	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
 }
