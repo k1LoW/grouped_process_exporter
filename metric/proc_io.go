@@ -12,39 +12,39 @@ type ProcIOMetric struct {
 
 func (m *ProcIOMetric) Describe() map[string]*prometheus.Desc {
 	descs := map[string]*prometheus.Desc{
-		"grouped_process_io_r_char": prometheus.NewDesc(
-			"grouped_process_io_r_char",
-			"Grouped /proc/[PID]/io.rchar",
+		"grouped_process_io_r_char_total": prometheus.NewDesc(
+			"grouped_process_io_r_char_total",
+			"Total number of grouped /proc/[PID]/io.rchar",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_w_char": prometheus.NewDesc(
-			"grouped_process_io_w_char",
-			"Grouped /proc/[PID]/io.wchar",
+		"grouped_process_io_w_char_total": prometheus.NewDesc(
+			"grouped_process_io_w_char_total",
+			"Total number of grouped /proc/[PID]/io.wchar",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_sysc_r": prometheus.NewDesc(
-			"grouped_process_io_sysc_r",
-			"Grouped /proc/[PID]/io.syscr",
+		"grouped_process_io_sysc_r_total": prometheus.NewDesc(
+			"grouped_process_io_sysc_r_total",
+			"Total number of grouped /proc/[PID]/io.syscr",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_sysc_w": prometheus.NewDesc(
-			"grouped_process_io_sysc_w",
-			"Grouped /proc/[PID]/io.syscw",
+		"grouped_process_io_sysc_w_total": prometheus.NewDesc(
+			"grouped_process_io_sysc_w_total",
+			"Total number of grouped /proc/[PID]/io.syscw",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_read_bytes": prometheus.NewDesc(
-			"grouped_process_io_read_bytes",
-			"Grouped /proc/[PID]/io.read_bytes",
+		"grouped_process_io_read_bytes_total": prometheus.NewDesc(
+			"grouped_process_io_read_bytes_total",
+			"Total number of grouped /proc/[PID]/io.read_bytes",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_write_bytes": prometheus.NewDesc(
-			"grouped_process_io_write_bytes",
-			"Grouped /proc/[PID]/io.write_bytes",
+		"grouped_process_io_write_bytes_total": prometheus.NewDesc(
+			"grouped_process_io_write_bytes_total",
+			"Total number of grouped /proc/[PID]/io.write_bytes",
 			[]string{"grouper", "group"}, nil,
 		),
-		"grouped_process_io_cancelled_write_bytes": prometheus.NewDesc(
-			"grouped_process_io_cancelled_write_bytes",
-			"Grouped /proc/[PID]/io.cancelled_write_bytes",
+		"grouped_process_io_cancelled_write_bytes_total": prometheus.NewDesc(
+			"grouped_process_io_cancelled_write_bytes_total",
+			"Total number of grouped /proc/[PID]/io.cancelled_write_bytes",
 			[]string{"grouper", "group"}, nil,
 		),
 	}
@@ -85,13 +85,14 @@ func (m *ProcIOMetric) SetCollectedMetric(ch chan<- prometheus.Metric, descs map
 		cancelledWriteBytes = cancelledWriteBytes + float64(metric.CancelledWriteBytes)
 	}
 
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char"], prometheus.CounterValue, float64(rChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char"], prometheus.CounterValue, float64(wChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r"], prometheus.CounterValue, float64(syscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w"], prometheus.CounterValue, float64(syscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes"], prometheus.CounterValue, float64(readBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes"], prometheus.CounterValue, float64(writeBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes"], prometheus.CounterValue, float64(cancelledWriteBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char_total"], prometheus.CounterValue, rChar, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char_total"], prometheus.CounterValue, wChar, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r_total"], prometheus.CounterValue, syscW, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w_total"], prometheus.CounterValue, syscW, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes_total"], prometheus.CounterValue, readBytes, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes_total"], prometheus.CounterValue, writeBytes, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes_total"], prometheus.CounterValue, cancelledWriteBytes, grouper, group)
+
 	return nil
 }
 
