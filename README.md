@@ -17,7 +17,7 @@ For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized
 
 | Name | Type | Description |
 | --- | --- | --- |
-| grouped_process_procs | Gauge | Amount of grouped procs |
+| grouped_process_procs | Gauge | Amount of grouped process |
 
 ### Grouped /proc/[PID]/stat ( `--collector.stat` )
 
