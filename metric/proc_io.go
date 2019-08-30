@@ -71,12 +71,12 @@ func (m *ProcIOMetric) CollectFromProc(proc procfs.Proc) error {
 }
 
 func (m *ProcIOMetric) SetCollectedMetric(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error {
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char"], prometheus.CounterValue, float64(m.RChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char"], prometheus.CounterValue, float64(m.WChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r"], prometheus.CounterValue, float64(m.SyscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w"], prometheus.CounterValue, float64(m.SyscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes"], prometheus.CounterValue, float64(m.ReadBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes"], prometheus.CounterValue, float64(m.WriteBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes"], prometheus.CounterValue, float64(m.CancelledWriteBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char"], prometheus.GaugeValue, float64(m.RChar), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char"], prometheus.GaugeValue, float64(m.WChar), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r"], prometheus.GaugeValue, float64(m.SyscW), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w"], prometheus.GaugeValue, float64(m.SyscW), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes"], prometheus.GaugeValue, float64(m.ReadBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes"], prometheus.GaugeValue, float64(m.WriteBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes"], prometheus.GaugeValue, float64(m.CancelledWriteBytes), grouper, group)
 	return nil
 }
