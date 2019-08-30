@@ -69,11 +69,10 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 						return nil
 					}
 					_, ok := gpMap[cPath]
-					if ok {
-						_ = f.Close()
-						return nil
+					if !ok {
+						gpMap[cPath] = grouped_proc.NewGroupedProc(enabled)
 					}
-					gpMap[cPath] = grouped_proc.NewGroupedProc(enabled)
+					gpMap[cPath].Exists = true
 					reader := bufio.NewReaderSize(f, 1028)
 					for {
 						line, _, err := reader.ReadLine()

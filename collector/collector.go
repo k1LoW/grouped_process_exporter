@@ -30,9 +30,12 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
-	c.GroupedProcs = make(map[string]*grouped_proc.GroupedProc) // clear
 	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled)
 	for group, proc := range c.GroupedProcs {
+		if !proc.Exists {
+			delete(c.GroupedProcs, group)
+			continue
+		}
 		for key, metric := range proc.Metrics {
 			if proc.Enabled[key] {
 				err := metric.SetCollectedMetric(ch, c.descs, c.Grouper.Name(), group)
@@ -42,6 +45,7 @@ func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 			}
 		}
+		proc.Exists = false
 	}
 }
 

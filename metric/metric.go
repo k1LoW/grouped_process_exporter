@@ -28,10 +28,10 @@ func AvairableMetrics() map[MetricKey]Metric {
 	metrics := map[MetricKey]Metric{}
 
 	// procs
-	metrics[ProcProcs] = &ProcProcsMetric{}
+	metrics[ProcProcs] = NewProcProcsMetric()
 
 	// io
-	metrics[ProcIO] = &ProcIOMetric{}
+	metrics[ProcIO] = NewProcIOMetric()
 
 	return metrics
 }

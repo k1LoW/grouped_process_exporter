@@ -57,6 +57,7 @@ func (g *ProcStatusName) Collect(gpMap map[string]*grouped_proc.GroupedProc, ena
 		if !ok {
 			gpMap[name] = grouped_proc.NewGroupedProc(enabled)
 		}
+		gpMap[name].Exists = true
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
 			_ = g.AppendPid(pid)
