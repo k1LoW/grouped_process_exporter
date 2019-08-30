@@ -16,11 +16,13 @@ type MetricKey string
 
 var (
 	ProcProcs MetricKey = "proc_procs"
+	ProcStat  MetricKey = "proc_stat"
 	ProcIO    MetricKey = "proc_io"
 )
 
 var MetricKeys = []MetricKey{
 	ProcProcs,
+	ProcStat,
 	ProcIO,
 }
 
@@ -29,6 +31,9 @@ func AvairableMetrics() map[MetricKey]Metric {
 
 	// procs
 	metrics[ProcProcs] = NewProcProcsMetric()
+
+	// stat
+	metrics[ProcStat] = NewProcStatMetric()
 
 	// io
 	metrics[ProcIO] = NewProcIOMetric()

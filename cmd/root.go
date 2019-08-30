@@ -39,11 +39,12 @@ import (
 )
 
 var (
-	address   string
-	endpoint  string
-	groupType string
-	nReStr    string
-	collectIO bool
+	address     string
+	endpoint    string
+	groupType   string
+	nReStr      string
+	collectStat bool
+	collectIO   bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -52,7 +53,7 @@ var rootCmd = &cobra.Command{
 	Short: "Exporter for grouped process",
 	Long:  `Exporter for grouped process.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectIO)
+		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectStat, collectIO)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 		}
@@ -60,7 +61,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func runRoot(args []string, address, endpoint, groupType, nReStr string, collectIO bool) (int, error) {
+func runRoot(args []string, address, endpoint, groupType, nReStr string, collectStat, collectIO bool) (int, error) {
 	var g grouper.Grouper
 	switch groupType {
 	case "cgroup":
@@ -79,6 +80,9 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	collector, err := collector.NewGroupedProcCollector(g)
 	if err != nil {
 		return 1, err
+	}
+	if collectStat {
+		collector.EnableMetric(metric.ProcStat)
 	}
 	if collectIO {
 		collector.EnableMetric(metric.ProcIO)
@@ -102,5 +106,6 @@ func init() {
 	rootCmd.Flags().StringVarP(&endpoint, "telemetry.endpoint", "", "/metrics", "Path under which to expose metrics.")
 	rootCmd.Flags().StringVarP(&groupType, "group.type", "", "cgroup", "Grouping type.")
 	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result `$1` as group name.")
+	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
 }
