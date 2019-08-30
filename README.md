@@ -23,13 +23,13 @@ For example, by setting `--group.normalize='^(/path/to/tcpdp).*$'`, Exporter nor
 
 | Name | Type | Description |
 | --- | --- | --- |
-| grouped_process_io_r_char | Gauge | Grouped /proc/[PID]/io.rchar |
-| grouped_process_io_w_char | Gauge | Grouped /proc/[PID]/io.wchar |
-| grouped_process_io_sysc_r | Gauge | Grouped /proc/[PID]/io.syscr |
-| grouped_process_io_sysc_w | Gauge | Grouped /proc/[PID]/io.syscw |
-| grouped_process_io_read_bytes | Gauge | Grouped /proc/[PID]/io.read_bytes |
-| grouped_process_io_write_bytes | Gauge | Grouped /proc/[PID]/io.write_bytes |
-| grouped_process_io_cancelled_write_bytes | Gauge | Grouped /proc/[PID]/io.cancelled_write_bytes |
+| grouped_process_io_r_char | Counter | Grouped /proc/[PID]/io.rchar |
+| grouped_process_io_w_char | Counter | Grouped /proc/[PID]/io.wchar |
+| grouped_process_io_sysc_r | Counter | Grouped /proc/[PID]/io.syscr |
+| grouped_process_io_sysc_w | Counter | Grouped /proc/[PID]/io.syscw |
+| grouped_process_io_read_bytes | Counter | Grouped /proc/[PID]/io.read_bytes |
+| grouped_process_io_write_bytes | Counter | Grouped /proc/[PID]/io.write_bytes |
+| grouped_process_io_cancelled_write_bytes | Counter | Grouped /proc/[PID]/io.cancelled_write_bytes |
 
 ## TODO
 

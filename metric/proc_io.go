@@ -7,7 +7,7 @@ import (
 
 // ProcIOMetric is metric
 type ProcIOMetric struct {
-	procfs.ProcIO
+	metrics map[int]procfs.ProcIO
 }
 
 func (m *ProcIOMetric) Describe() map[string]*prometheus.Desc {
@@ -60,23 +60,43 @@ func (m *ProcIOMetric) CollectFromProc(proc procfs.Proc) error {
 	if err != nil {
 		return err
 	}
-	m.RChar = m.RChar + pio.RChar
-	m.WChar = m.WChar + pio.WChar
-	m.SyscR = m.SyscR + pio.SyscR
-	m.SyscW = m.SyscW + pio.SyscW
-	m.ReadBytes = m.ReadBytes + pio.ReadBytes
-	m.WriteBytes = m.WriteBytes + pio.WriteBytes
-	m.CancelledWriteBytes = m.CancelledWriteBytes + pio.CancelledWriteBytes
+	m.metrics[proc.PID] = pio
 	return nil
 }
 
 func (m *ProcIOMetric) SetCollectedMetric(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error {
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char"], prometheus.GaugeValue, float64(m.RChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char"], prometheus.GaugeValue, float64(m.WChar), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r"], prometheus.GaugeValue, float64(m.SyscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w"], prometheus.GaugeValue, float64(m.SyscW), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes"], prometheus.GaugeValue, float64(m.ReadBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes"], prometheus.GaugeValue, float64(m.WriteBytes), grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes"], prometheus.GaugeValue, float64(m.CancelledWriteBytes), grouper, group)
+	var (
+		rChar               float64
+		wChar               float64
+		syscR               float64
+		syscW               float64
+		readBytes           float64
+		writeBytes          float64
+		cancelledWriteBytes float64
+	)
+
+	for _, metric := range m.metrics {
+		rChar = rChar + float64(metric.RChar)
+		wChar = wChar + float64(metric.WChar)
+		syscR = syscR + float64(metric.SyscR)
+		syscW = syscW + float64(metric.SyscW)
+		readBytes = readBytes + float64(metric.ReadBytes)
+		writeBytes = writeBytes + float64(metric.WriteBytes)
+		cancelledWriteBytes = cancelledWriteBytes + float64(metric.CancelledWriteBytes)
+	}
+
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char"], prometheus.CounterValue, float64(rChar), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char"], prometheus.CounterValue, float64(wChar), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r"], prometheus.CounterValue, float64(syscW), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w"], prometheus.CounterValue, float64(syscW), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes"], prometheus.CounterValue, float64(readBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes"], prometheus.CounterValue, float64(writeBytes), grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes"], prometheus.CounterValue, float64(cancelledWriteBytes), grouper, group)
 	return nil
+}
+
+func NewProcIOMetric() *ProcIOMetric {
+	return &ProcIOMetric{
+		metrics: make(map[int]procfs.ProcIO),
+	}
 }

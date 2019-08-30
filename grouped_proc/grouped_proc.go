@@ -11,12 +11,14 @@ type GroupedProc struct {
 	sync.Mutex
 	Metrics map[metric.MetricKey]metric.Metric
 	Enabled map[metric.MetricKey]bool
+	Exists  bool
 }
 
 func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	return &GroupedProc{
 		Enabled: enabled,
 		Metrics: metric.AvairableMetrics(),
+		Exists:  true,
 	}
 }
 
