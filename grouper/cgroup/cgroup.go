@@ -2,9 +2,11 @@ package cgroup
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -32,6 +34,7 @@ var Subsystems = []string{
 
 type Cgroup struct {
 	fsPath string
+	nRe    *regexp.Regexp
 }
 
 func (c *Cgroup) Name() string {
@@ -53,6 +56,12 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 			}
 			if f.IsDir() {
 				cPath := strings.Replace(path, searchDir, "", 1)
+				if c.nRe != nil {
+					matches := c.nRe.FindStringSubmatch(cPath)
+					if len(matches) > 1 {
+						cPath = matches[1]
+					}
+				}
 				if cPath != "" {
 					f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
 					if err != nil {
@@ -97,6 +106,21 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 	}
 
 	wg.Wait()
+	return nil
+}
+
+func (c *Cgroup) SetNormalizeRegexp(nReStr string) error {
+	if nReStr == "" {
+		return nil
+	}
+	nRe, err := regexp.Compile(nReStr)
+	if err != nil {
+		return err
+	}
+	if nRe.NumSubexp() != 1 {
+		return errors.New("number of parenthesized subexpressions in this regexp should be 1")
+	}
+	c.nRe = nRe
 	return nil
 }
 

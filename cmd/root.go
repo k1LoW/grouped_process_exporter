@@ -42,6 +42,7 @@ var (
 	address   string
 	endpoint  string
 	group     string
+	nReStr    string
 	collectIO bool
 )
 
@@ -51,7 +52,7 @@ var rootCmd = &cobra.Command{
 	Short: "Exporter for grouped process",
 	Long:  `Exporter for grouped process.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		status, err := runRoot(args, address, endpoint, group, collectIO)
+		status, err := runRoot(args, address, endpoint, group, nReStr, collectIO)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 		}
@@ -59,7 +60,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func runRoot(args []string, address, endpoint, group string, collectIO bool) (int, error) {
+func runRoot(args []string, address, endpoint, group, nReStr string, collectIO bool) (int, error) {
 	var g grouper.Grouper
 	switch group {
 	case "cgroup":
@@ -69,6 +70,10 @@ func runRoot(args []string, address, endpoint, group string, collectIO bool) (in
 		g = proc_status_name.NewProcStatusName()
 	default:
 		return 1, errors.New("invalid grouping type")
+	}
+	err := g.SetNormalizeRegexp(nReStr)
+	if err != nil {
+		return 1, err
 	}
 
 	collector, err := collector.NewGroupedProcCollector(g)
@@ -80,6 +85,7 @@ func runRoot(args []string, address, endpoint, group string, collectIO bool) (in
 	}
 	prometheus.MustRegister(collector)
 	http.Handle(endpoint, promhttp.Handler())
+	log.Println(fmt.Sprintf("Starting exporter. %s%s", address, endpoint))
 	log.Fatal(http.ListenAndServe(address, nil))
 	return 0, nil
 }
@@ -95,5 +101,6 @@ func init() {
 	rootCmd.Flags().StringVarP(&address, "telemetry.address", "", ":9629", "Address on which to expose metrics.")
 	rootCmd.Flags().StringVarP(&endpoint, "telemetry.endpoint", "", "/metrics", "Path under which to expose metrics.")
 	rootCmd.Flags().StringVarP(&group, "group.type", "", "cgroup", "Grouping type.")
+	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result `$1` as group name.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
 }

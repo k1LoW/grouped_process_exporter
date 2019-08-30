@@ -25,7 +25,6 @@
 | grouped_process_io_write_bytes | Gauge | Grouped /proc/[PID]/io.write_bytes |
 | grouped_process_io_cancelled_write_bytes | Gauge | Grouped /proc/[PID]/io.cancelled_write_bytes |
 
-
 ## TODO
 
 - [ ] Logging
