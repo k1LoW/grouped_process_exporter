@@ -51,5 +51,4 @@ For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized
 ## TODO
 
 - [ ] Test
-- [ ] More metrics
 - [ ] Logging
