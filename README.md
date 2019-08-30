@@ -9,7 +9,7 @@
 
 Exporter normalize group names using regexp `--group.normalize` option.
 
-For example, by setting `--group.normalize='^(/path/to/tcpdp).*$'`, Exporter normalized the group names `/path/to/tcpdp-eth0` and `/path/to/tcpdp-eth1` to `/path/to/tcpdp`.
+For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized the group names `/path/to/tcpdp-eth0` and `/path/to/tcpdp-eth1` to `tcpdp`.
 
 ## Avairable Metrics
 
