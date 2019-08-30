@@ -2,7 +2,8 @@
 
 ## Supported grouping
 
-- control group v1 ( `cgroup` , default )
+- control group v1 ( `cgroup`, default )
+- /proc/[PID]/status.Name ( `name`, **this is PoC** )
 
 ## Avairable Metrics
 

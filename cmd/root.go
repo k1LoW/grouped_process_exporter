@@ -31,6 +31,7 @@ import (
 	"github.com/k1LoW/grouped_process_exporter/collector"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
 	"github.com/k1LoW/grouped_process_exporter/grouper/cgroup"
+	"github.com/k1LoW/grouped_process_exporter/grouper/proc_status_name"
 	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -64,6 +65,8 @@ func runRoot(args []string, address, endpoint, group string, collectIO bool) (in
 	case "cgroup":
 		fsPath := "/sys/fs/cgroup"
 		g = cgroup.NewCgroup(fsPath)
+	case "name":
+		g = proc_status_name.NewProcStatusName()
 	default:
 		return 1, errors.New("invalid grouping type")
 	}

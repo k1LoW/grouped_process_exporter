@@ -100,7 +100,7 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 	return nil
 }
 
-// NewCgroup ...
+// NewCgroup
 func NewCgroup(fsPath string) *Cgroup {
 	return &Cgroup{
 		fsPath: fsPath,
