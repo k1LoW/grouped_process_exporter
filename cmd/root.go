@@ -33,6 +33,7 @@ import (
 	"github.com/k1LoW/grouped_process_exporter/grouper/cgroup"
 	"github.com/k1LoW/grouped_process_exporter/grouper/proc_status_name"
 	"github.com/k1LoW/grouped_process_exporter/metric"
+	"github.com/k1LoW/grouped_process_exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
@@ -52,6 +53,18 @@ var rootCmd = &cobra.Command{
 	Use:   "grouped_process_exporter",
 	Short: "Exporter for grouped process",
 	Long:  `Exporter for grouped process.`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		versionVal, err := cmd.Flags().GetBool("version")
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		if versionVal {
+			fmt.Println(version.Version)
+			os.Exit(0)
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectStat, collectIO)
 		if err != nil {
@@ -108,4 +121,6 @@ func init() {
 	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result `$1` as group name.")
 	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
+
+	rootCmd.Flags().BoolP("version", "v", false, "print the version")
 }
