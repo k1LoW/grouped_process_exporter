@@ -5,7 +5,7 @@
 - control group v1 ( `cgroup`, default )
 - /proc/[PID]/status.Name: ( `name`, **this is PoC** )
 
-### Advanced grouping
+### :unlock: Advanced grouping
 
 Exporter normalize group names using regexp `--group.normalize` option.
 
@@ -34,4 +34,5 @@ For example, by setting `--group.normalize='^(/path/to/tcpdp).*$'`, Exporter nor
 ## TODO
 
 - [ ] Test
+- [ ] More metrics
 - [ ] Logging
