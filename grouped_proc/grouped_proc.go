@@ -33,7 +33,7 @@ func DefaultEnabledMetrics() map[metric.MetricKey]bool {
 	return enabled
 }
 
-func (g *GroupedProc) AppendAndCollectFromProc(pid int) error {
+func (g *GroupedProc) AppendProcAndCollect(pid int) error {
 	fs, err := procfs.NewFS(g.ProcMountPoint)
 	if err != nil {
 		return err
