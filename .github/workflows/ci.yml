@@ -24,3 +24,5 @@ jobs:
 
       - name: Run codecov
         run: codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
