@@ -1,0 +1,49 @@
+Name:	mysqld
+State:	R (running)
+Tgid:	1304
+Ngid:	0
+Pid:	1424
+PPid:	1
+TracerPid:	0
+Uid:	112	112	112	112
+Gid:	117	117	117	117
+FDSize:	128
+Groups:	117 
+NStgid:	1304
+NSpid:	1424
+NSpgid:	1304
+NSsid:	1304
+VmPeak:	 1175568 kB
+VmSize:	 1110816 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	  147032 kB
+VmRSS:	  137356 kB
+VmData:	 1043940 kB
+VmStk:	     132 kB
+VmExe:	   22724 kB
+VmLib:	    5220 kB
+VmPTE:	     552 kB
+VmPMD:	      16 kB
+VmSwap:	     304 kB
+HugetlbPages:	       0 kB
+Threads:	32
+SigQ:	0/3852
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000084007
+SigIgn:	0000000000003000
+SigCgt:	00000001800006e8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	1
+Cpus_allowed_list:	0
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	16643
+nonvoluntary_ctxt_switches:	2

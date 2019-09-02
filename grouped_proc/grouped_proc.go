@@ -1,6 +1,7 @@
 package grouped_proc
 
 import (
+	"os"
 	"sync"
 
 	"github.com/k1LoW/grouped_process_exporter/metric"
@@ -9,16 +10,22 @@ import (
 
 type GroupedProc struct {
 	sync.Mutex
-	Metrics map[metric.MetricKey]metric.Metric
-	Enabled map[metric.MetricKey]bool
-	Exists  bool
+	Metrics        map[metric.MetricKey]metric.Metric
+	Enabled        map[metric.MetricKey]bool
+	Exists         bool
+	ProcMountPoint string
 }
 
 func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
+	procMountPoint := os.Getenv("GROUPED_PROCESS_PROC_MOUNT_POINT")
+	if procMountPoint == "" {
+		procMountPoint = procfs.DefaultMountPoint
+	}
 	return &GroupedProc{
-		Enabled: enabled,
-		Metrics: metric.AvairableMetrics(),
-		Exists:  true,
+		Enabled:        enabled,
+		Metrics:        metric.AvairableMetrics(),
+		Exists:         true,
+		ProcMountPoint: procMountPoint,
 	}
 }
 
@@ -31,8 +38,12 @@ func DefaultEnabledMetrics() map[metric.MetricKey]bool {
 	return enabled
 }
 
-func (g *GroupedProc) AppendPid(pid int) error {
-	proc, err := procfs.NewProc(pid)
+func (g *GroupedProc) AppendProcAndCollect(pid int) error {
+	fs, err := procfs.NewFS(g.ProcMountPoint)
+	if err != nil {
+		return err
+	}
+	proc, err := fs.Proc(pid)
 	if err != nil {
 		return err
 	}

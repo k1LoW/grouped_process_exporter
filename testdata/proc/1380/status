@@ -1,0 +1,49 @@
+Name:	nginx
+State:	S (sleeping)
+Tgid:	1380
+Ngid:	0
+Pid:	1380
+PPid:	1357
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 24 27 30 46 110 115 116 1000 
+NStgid:	1380
+NSpid:	1380
+NSpgid:	1357
+NSsid:	1357
+VmPeak:	  126424 kB
+VmSize:	  126340 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    5900 kB
+VmRSS:	    5096 kB
+VmData:	    2312 kB
+VmStk:	     132 kB
+VmExe:	    1080 kB
+VmLib:	   44076 kB
+VmPTE:	     180 kB
+VmPMD:	      12 kB
+VmSwap:	      72 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/3852
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000040001000
+SigCgt:	0000000198016a07
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	1
+Cpus_allowed_list:	0
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	51333
+nonvoluntary_ctxt_switches:	626
