@@ -1,4 +1,4 @@
-# Exporter for grouped process
+# Exporter for grouped process [![GitHub Actions](https://action-badges.now.sh/k1LoW/grouped_process_exporter)](https://github.com/k1LoW/grouped_process_exporter/actions) [![codecov](https://codecov.io/gh/k1LoW/grouped_process_exporter/branch/master/graph/badge.svg)](https://codecov.io/gh/k1LoW/grouped_process_exporter)
 
 ## Supported grouping
 
@@ -50,5 +50,4 @@ For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized
 
 ## TODO
 
-- [ ] Test
 - [ ] Logging
