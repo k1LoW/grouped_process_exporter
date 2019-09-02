@@ -90,7 +90,7 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 
 						wg.Add(1)
 						go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
-							_ = g.AppendPid(pid)
+							_ = g.AppendProcAndCollect(pid)
 							wg.Done()
 						}(wg, pid, gpMap[cPath])
 					}

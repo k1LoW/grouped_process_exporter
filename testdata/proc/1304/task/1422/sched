@@ -1,0 +1,53 @@
+mysqld (1422, #threads: 32)
+-------------------------------------------------------------------
+se.exec_start                                :      16654715.126106
+se.vruntime                                  :          2148.646611
+se.sum_exec_runtime                          :           391.597273
+se.statistics.sum_sleep_runtime              :      16644606.527445
+se.statistics.wait_start                     :             0.000000
+se.statistics.sleep_start                    :      16654715.126106
+se.statistics.block_start                    :             0.000000
+se.statistics.sleep_max                      :          1007.431752
+se.statistics.block_max                      :             0.000000
+se.statistics.exec_max                       :             0.968139
+se.statistics.slice_max                      :             0.137123
+se.statistics.wait_max                       :             5.640662
+se.statistics.wait_sum                       :          1782.773401
+se.statistics.wait_count                     :                16642
+se.statistics.iowait_sum                     :             0.000000
+se.statistics.iowait_count                   :                    0
+se.nr_migrations                             :                    0
+se.statistics.nr_migrations_cold             :                    0
+se.statistics.nr_failed_migrations_affine    :                    0
+se.statistics.nr_failed_migrations_running   :                    0
+se.statistics.nr_failed_migrations_hot       :                    0
+se.statistics.nr_forced_migrations           :                    0
+se.statistics.nr_wakeups                     :                16634
+se.statistics.nr_wakeups_sync                :                    0
+se.statistics.nr_wakeups_migrate             :                    0
+se.statistics.nr_wakeups_local               :                16634
+se.statistics.nr_wakeups_remote              :                    0
+se.statistics.nr_wakeups_affine              :                    0
+se.statistics.nr_wakeups_affine_attempts     :                    0
+se.statistics.nr_wakeups_passive             :                    0
+se.statistics.nr_wakeups_idle                :                    0
+avg_atom                                     :             0.023530
+avg_per_cpu                                  :             0.000001
+nr_switches                                  :                16642
+nr_voluntary_switches                        :                16635
+nr_involuntary_switches                      :                    7
+se.load.weight                               :                 1024
+se.avg.load_sum                              :              3435484
+se.avg.util_sum                              :                12288
+se.avg.load_avg                              :                   71
+se.avg.util_avg                              :                    0
+se.avg.last_update_time                      :       16654715126106
+policy                                       :                    0
+prio                                         :                  120
+clock-delta                                  :                   32
+mm->numa_scan_seq                            :                    0
+numa_pages_migrated                          :                    0
+numa_preferred_nid                           :                   -1
+total_numa_faults                            :                    0
+current_node=0, numa_group_id=0
+numa_faults node=0 task_private=0 task_shared=0 group_private=0 group_shared=0

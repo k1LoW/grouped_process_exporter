@@ -1,0 +1,11 @@
+11:hugetlb:/
+10:devices:/system.slice/mysql.service
+9:pids:/system.slice/mysql.service
+8:blkio:/system.slice/mysql.service
+7:cpuset:/
+6:freezer:/
+5:cpu,cpuacct:/system.slice/mysql.service
+4:perf_event:/
+3:net_cls,net_prio:/
+2:memory:/system.slice/mysql.service
+1:name=systemd:/system.slice/mysql.service

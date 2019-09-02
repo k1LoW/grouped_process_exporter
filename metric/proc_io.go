@@ -64,7 +64,7 @@ func (m *ProcIOMetric) CollectFromProc(proc procfs.Proc) error {
 	return nil
 }
 
-func (m *ProcIOMetric) SetCollectedMetric(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error {
+func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error {
 	var (
 		rChar               float64
 		wChar               float64
