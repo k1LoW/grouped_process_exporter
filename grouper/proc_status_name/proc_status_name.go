@@ -60,7 +60,7 @@ func (g *ProcStatusName) Collect(gpMap map[string]*grouped_proc.GroupedProc, ena
 		gpMap[name].Exists = true
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
-			_ = g.AppendAndCollectFromProc(pid)
+			_ = g.AppendProcAndCollect(pid)
 			wg.Done()
 		}(wg, pid, gpMap[name])
 	}
