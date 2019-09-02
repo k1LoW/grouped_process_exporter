@@ -9,16 +9,18 @@ import (
 
 type GroupedProc struct {
 	sync.Mutex
-	Metrics map[metric.MetricKey]metric.Metric
-	Enabled map[metric.MetricKey]bool
-	Exists  bool
+	Metrics        map[metric.MetricKey]metric.Metric
+	Enabled        map[metric.MetricKey]bool
+	Exists         bool
+	ProcMountPoint string
 }
 
 func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	return &GroupedProc{
-		Enabled: enabled,
-		Metrics: metric.AvairableMetrics(),
-		Exists:  true,
+		Enabled:        enabled,
+		Metrics:        metric.AvairableMetrics(),
+		Exists:         true,
+		ProcMountPoint: procfs.DefaultMountPoint,
 	}
 }
 
@@ -31,8 +33,12 @@ func DefaultEnabledMetrics() map[metric.MetricKey]bool {
 	return enabled
 }
 
-func (g *GroupedProc) AppendPid(pid int) error {
-	proc, err := procfs.NewProc(pid)
+func (g *GroupedProc) AppendAndCollectFromProc(pid int) error {
+	fs, err := procfs.NewFS(g.ProcMountPoint)
+	if err != nil {
+		return err
+	}
+	proc, err := fs.Proc(pid)
 	if err != nil {
 		return err
 	}
