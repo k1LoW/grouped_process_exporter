@@ -38,9 +38,9 @@ func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 		}
 		for key, metric := range proc.Metrics {
 			if proc.Enabled[key] {
-				err := metric.SetCollectedMetric(ch, c.descs, c.Grouper.Name(), group)
+				err := metric.PushCollected(ch, c.descs, c.Grouper.Name(), group)
 				if err != nil {
-					// TODO: metric.SetDefaultMetric(ch, c.descs, c.Grouper.Name(), group)
+					// TODO: metric.PushDefaultMetric(ch, c.descs, c.Grouper.Name(), group)
 					continue
 				}
 			}

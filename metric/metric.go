@@ -9,7 +9,7 @@ type Metric interface {
 	Describe() map[string]*prometheus.Desc
 	String() string
 	CollectFromProc(proc procfs.Proc) error
-	SetCollectedMetric(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error
+	PushCollected(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error
 }
 
 type MetricKey string
