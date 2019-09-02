@@ -1,0 +1,4 @@
+pos:	0
+flags:	0100002
+mnt_id:	23
+lock:	1: POSIX  ADVISORY  WRITE 1304 fc:00:2100292 0 EOF
