@@ -1,0 +1,53 @@
+nginx (1388, #threads: 1)
+-------------------------------------------------------------------
+se.exec_start                                :      16626551.266022
+se.vruntime                                  :          6853.221457
+se.sum_exec_runtime                          :          3212.881042
+se.statistics.sum_sleep_runtime              :      16609550.177294
+se.statistics.wait_start                     :             0.000000
+se.statistics.sleep_start                    :      16626551.266022
+se.statistics.block_start                    :             0.000000
+se.statistics.sleep_max                      :         19112.826026
+se.statistics.block_max                      :             6.840686
+se.statistics.exec_max                       :             3.981761
+se.statistics.slice_max                      :             1.658946
+se.statistics.wait_max                       :            23.373579
+se.statistics.wait_sum                       :          6305.970951
+se.statistics.wait_count                     :                54463
+se.statistics.iowait_sum                     :             1.234378
+se.statistics.iowait_count                   :                    3
+se.nr_migrations                             :                    0
+se.statistics.nr_migrations_cold             :                    0
+se.statistics.nr_failed_migrations_affine    :                    0
+se.statistics.nr_failed_migrations_running   :                    0
+se.statistics.nr_failed_migrations_hot       :                    0
+se.statistics.nr_forced_migrations           :                    0
+se.statistics.nr_wakeups                     :                53753
+se.statistics.nr_wakeups_sync                :                    0
+se.statistics.nr_wakeups_migrate             :                    0
+se.statistics.nr_wakeups_local               :                53753
+se.statistics.nr_wakeups_remote              :                    0
+se.statistics.nr_wakeups_affine              :                    0
+se.statistics.nr_wakeups_affine_attempts     :                    0
+se.statistics.nr_wakeups_passive             :                    0
+se.statistics.nr_wakeups_idle                :                    0
+avg_atom                                     :             0.058991
+avg_per_cpu                                  :             0.000001
+nr_switches                                  :                54463
+nr_voluntary_switches                        :                53733
+nr_involuntary_switches                      :                  730
+se.load.weight                               :                 1024
+se.avg.load_sum                              :                48148
+se.avg.util_sum                              :                48148
+se.avg.load_avg                              :                    0
+se.avg.util_avg                              :                    0
+se.avg.last_update_time                      :       16626551266022
+policy                                       :                    0
+prio                                         :                  120
+clock-delta                                  :                   26
+mm->numa_scan_seq                            :                    0
+numa_pages_migrated                          :                    0
+numa_preferred_nid                           :                   -1
+total_numa_faults                            :                    0
+current_node=0, numa_group_id=0
+numa_faults node=0 task_private=0 task_shared=0 group_private=0 group_shared=0

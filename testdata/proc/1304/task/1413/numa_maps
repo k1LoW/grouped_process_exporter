@@ -1,0 +1,185 @@
+00400000 default file=/usr/sbin/mysqld mapped=1630 active=1019 N0=1630 kernelpagesize_kB=4
+01c31000 default file=/usr/sbin/mysqld anon=62 dirty=53 mapped=110 swapcache=9 active=0 N0=110 kernelpagesize_kB=4
+01d13000 default file=/usr/sbin/mysqld anon=44 dirty=43 mapped=72 swapcache=1 active=31 N0=72 kernelpagesize_kB=4
+01dbd000 default anon=153 dirty=153 active=19 N0=153 kernelpagesize_kB=4
+030a0000 default heap anon=2275 dirty=2275 active=2087 N0=2275 kernelpagesize_kB=4
+7f98a4000000 default anon=52 dirty=52 N0=52 kernelpagesize_kB=4
+7f98a40aa000 default
+7f98ac000000 default anon=23 dirty=23 N0=23 kernelpagesize_kB=4
+7f98ac069000 default
+7f98b0000000 default anon=2848 dirty=2848 N0=2848 kernelpagesize_kB=4
+7f98b0b4f000 default
+7f98b4000000 default anon=8 dirty=8 N0=8 kernelpagesize_kB=4
+7f98b4024000 default
+7f98b8000000 default anon=30 dirty=30 N0=30 kernelpagesize_kB=4
+7f98b8072000 default
+7f98bc000000 default anon=8 dirty=8 N0=8 kernelpagesize_kB=4
+7f98bc024000 default
+7f98c0000000 default anon=8 dirty=8 N0=8 kernelpagesize_kB=4
+7f98c0021000 default
+7f98c4474000 default
+7f98c4475000 default anon=6 dirty=6 N0=6 kernelpagesize_kB=4
+7f98c44a5000 default
+7f98c44a6000 default anon=6 dirty=6 N0=6 kernelpagesize_kB=4
+7f98c44d6000 default
+7f98c44d7000 default anon=6 dirty=6 N0=6 kernelpagesize_kB=4
+7f98c4507000 default
+7f98c4508000 default anon=6 dirty=6 N0=6 kernelpagesize_kB=4
+7f98c4538000 default
+7f98c4539000 default anon=707 dirty=707 N0=707 kernelpagesize_kB=4
+7f98c4ffa000 default
+7f98c4ffb000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98c57fb000 default
+7f98c57fc000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98c5ffc000 default
+7f98c5ffd000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98c67fd000 default
+7f98c67fe000 default anon=7 dirty=7 N0=7 kernelpagesize_kB=4
+7f98c6ffe000 default
+7f98c6fff000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98c77ff000 default
+7f98c7800000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98c8000000 default anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98c8021000 default
+7f98cc021000 default
+7f98cc022000 default anon=9 dirty=9 N0=9 kernelpagesize_kB=4
+7f98cc052000 default
+7f98cc053000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98cc083000 default file=/usr/lib/mysql/plugin/auth_socket.so
+7f98cc084000 default file=/usr/lib/mysql/plugin/auth_socket.so
+7f98cc283000 default file=/usr/lib/mysql/plugin/auth_socket.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98cc284000 default file=/usr/lib/mysql/plugin/auth_socket.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98cc285000 default
+7f98cc286000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98cca86000 default
+7f98cca87000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98cd287000 default
+7f98cd288000 default anon=4 dirty=4 N0=4 kernelpagesize_kB=4
+7f98cda88000 default
+7f98cda89000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98ce289000 default
+7f98ce28a000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98cea8a000 default
+7f98cea8b000 default anon=532 dirty=532 N0=532 kernelpagesize_kB=4
+7f98cf4b1000 default
+7f98cf4b2000 default anon=4 dirty=4 N0=4 kernelpagesize_kB=4
+7f98cfcb2000 default
+7f98cfcb3000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d04b3000 default
+7f98d04b4000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d0cb4000 default
+7f98d0cb5000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d14b5000 default
+7f98d14b6000 default anon=3 dirty=3 N0=3 kernelpagesize_kB=4
+7f98d1cb6000 default
+7f98d1cb7000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d24b7000 default
+7f98d24b8000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d2cb8000 default
+7f98d2cb9000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d34b9000 default
+7f98d34ba000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d3cba000 default
+7f98d3cbb000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98d44bb000 default
+7f98d44bc000 default anon=248 dirty=248 N0=248 kernelpagesize_kB=4
+7f98d4dcf000 default anon=3909 dirty=3909 N0=3909 kernelpagesize_kB=4
+7f98df80d000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df812000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df817000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df81c000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df821000 default anon=65 dirty=65 N0=65 kernelpagesize_kB=4
+7f98df862000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df867000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df86c000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df871000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df876000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98df87b000 default anon=852 dirty=852 N0=852 kernelpagesize_kB=4
+7f98e1cdd000 default
+7f98e1cde000 default anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98e24de000 default file=/lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f98e24e9000 default file=/lib/x86_64-linux-gnu/libnss_files-2.23.so
+7f98e26e8000 default file=/lib/x86_64-linux-gnu/libnss_files-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e26e9000 default file=/lib/x86_64-linux-gnu/libnss_files-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e26ea000 default
+7f98e26f0000 default file=/lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f98e26fb000 default file=/lib/x86_64-linux-gnu/libnss_nis-2.23.so
+7f98e28fa000 default file=/lib/x86_64-linux-gnu/libnss_nis-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e28fb000 default file=/lib/x86_64-linux-gnu/libnss_nis-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e28fc000 default file=/lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f98e2904000 default file=/lib/x86_64-linux-gnu/libnss_compat-2.23.so
+7f98e2b03000 default file=/lib/x86_64-linux-gnu/libnss_compat-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e2b04000 default file=/lib/x86_64-linux-gnu/libnss_compat-2.23.so anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e2b05000 default anon=20298 dirty=20298 active=4803 N0=20298 kernelpagesize_kB=4
+7f98e7a50000 default file=/lib/x86_64-linux-gnu/libnsl-2.23.so
+7f98e7a66000 default file=/lib/x86_64-linux-gnu/libnsl-2.23.so
+7f98e7c65000 default file=/lib/x86_64-linux-gnu/libnsl-2.23.so
+7f98e7c66000 default file=/lib/x86_64-linux-gnu/libnsl-2.23.so
+7f98e7c67000 default
+7f98e7c69000 default file=/lib/x86_64-linux-gnu/libc-2.23.so mapped=375 mapmax=58 N0=375 kernelpagesize_kB=4
+7f98e7e29000 default file=/lib/x86_64-linux-gnu/libc-2.23.so
+7f98e8029000 default file=/lib/x86_64-linux-gnu/libc-2.23.so anon=3 dirty=1 swapcache=2 active=1 N0=3 kernelpagesize_kB=4
+7f98e802d000 default file=/lib/x86_64-linux-gnu/libc-2.23.so anon=2 dirty=2 N0=2 kernelpagesize_kB=4
+7f98e802f000 default anon=4 dirty=4 active=1 N0=4 kernelpagesize_kB=4
+7f98e8033000 default file=/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f98e8049000 default file=/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f98e8248000 default file=/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f98e8249000 default file=/lib/x86_64-linux-gnu/libm-2.23.so mapped=37 mapmax=10 N0=37 kernelpagesize_kB=4
+7f98e8351000 default file=/lib/x86_64-linux-gnu/libm-2.23.so
+7f98e8550000 default file=/lib/x86_64-linux-gnu/libm-2.23.so
+7f98e8551000 default file=/lib/x86_64-linux-gnu/libm-2.23.so
+7f98e8552000 default file=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 mapped=55 N0=55 kernelpagesize_kB=4
+7f98e86c4000 default file=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+7f98e88c4000 default file=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+7f98e88ce000 default file=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 anon=1 swapcache=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e88d0000 default anon=4 dirty=4 active=0 N0=4 kernelpagesize_kB=4
+7f98e88d4000 default file=/lib/x86_64-linux-gnu/libpthread-2.23.so mapped=24 mapmax=46 N0=24 kernelpagesize_kB=4
+7f98e88ec000 default file=/lib/x86_64-linux-gnu/libpthread-2.23.so
+7f98e8aeb000 default file=/lib/x86_64-linux-gnu/libpthread-2.23.so anon=1 swapcache=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e8aec000 default file=/lib/x86_64-linux-gnu/libpthread-2.23.so anon=1 swapcache=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e8aed000 default anon=1 dirty=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e8af1000 default file=/lib/x86_64-linux-gnu/librt-2.23.so
+7f98e8af8000 default file=/lib/x86_64-linux-gnu/librt-2.23.so
+7f98e8cf7000 default file=/lib/x86_64-linux-gnu/librt-2.23.so
+7f98e8cf8000 default file=/lib/x86_64-linux-gnu/librt-2.23.so
+7f98e8cf9000 default file=/lib/x86_64-linux-gnu/libz.so.1.2.8 mapped=15 mapmax=16 N0=15 kernelpagesize_kB=4
+7f98e8d12000 default file=/lib/x86_64-linux-gnu/libz.so.1.2.8
+7f98e8f11000 default file=/lib/x86_64-linux-gnu/libz.so.1.2.8
+7f98e8f12000 default file=/lib/x86_64-linux-gnu/libz.so.1.2.8
+7f98e8f13000 default file=/lib/x86_64-linux-gnu/libdl-2.23.so mapped=3 mapmax=33 N0=3 kernelpagesize_kB=4
+7f98e8f16000 default file=/lib/x86_64-linux-gnu/libdl-2.23.so
+7f98e9115000 default file=/lib/x86_64-linux-gnu/libdl-2.23.so
+7f98e9116000 default file=/lib/x86_64-linux-gnu/libdl-2.23.so
+7f98e9117000 default file=/lib/x86_64-linux-gnu/libcrypt-2.23.so mapped=8 mapmax=10 N0=8 kernelpagesize_kB=4
+7f98e9120000 default file=/lib/x86_64-linux-gnu/libcrypt-2.23.so
+7f98e931f000 default file=/lib/x86_64-linux-gnu/libcrypt-2.23.so
+7f98e9320000 default file=/lib/x86_64-linux-gnu/libcrypt-2.23.so
+7f98e9321000 default
+7f98e934f000 default file=/lib/x86_64-linux-gnu/libwrap.so.0.7.6 mapped=8 mapmax=4 N0=8 kernelpagesize_kB=4
+7f98e9357000 default file=/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f98e9556000 default file=/lib/x86_64-linux-gnu/libwrap.so.0.7.6 anon=1 swapcache=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e9557000 default file=/lib/x86_64-linux-gnu/libwrap.so.0.7.6 anon=1 dirty=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e9558000 default anon=1 dirty=1 N0=1 kernelpagesize_kB=4
+7f98e9559000 default file=/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7f98e9563000 default file=/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7f98e9762000 default file=/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7f98e9763000 default file=/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7f98e9764000 default file=/usr/lib/x86_64-linux-gnu/liblz4.so.1.7.1
+7f98e977b000 default file=/usr/lib/x86_64-linux-gnu/liblz4.so.1.7.1
+7f98e997a000 default file=/usr/lib/x86_64-linux-gnu/liblz4.so.1.7.1
+7f98e997b000 default file=/usr/lib/x86_64-linux-gnu/liblz4.so.1.7.1
+7f98e997c000 default file=/lib/x86_64-linux-gnu/libaio.so.1.0.1 mapped=1 N0=1 kernelpagesize_kB=4
+7f98e997d000 default file=/lib/x86_64-linux-gnu/libaio.so.1.0.1
+7f98e9b7c000 default file=/lib/x86_64-linux-gnu/libaio.so.1.0.1
+7f98e9b7d000 default file=/lib/x86_64-linux-gnu/libaio.so.1.0.1
+7f98e9b7e000 default file=/lib/x86_64-linux-gnu/ld-2.23.so mapped=38 mapmax=55 N0=38 kernelpagesize_kB=4
+7f98e9ba5000 default anon=492 dirty=492 active=0 N0=492 kernelpagesize_kB=4
+7f98e9d9b000 default file=/[aio]\040(deleted)
+7f98e9d9d000 default file=/[aio]\040(deleted) mapped=1 N0=1 kernelpagesize_kB=4
+7f98e9da2000 default file=/[aio]\040(deleted)
+7f98e9da3000 default file=/lib/x86_64-linux-gnu/ld-2.23.so anon=1 swapcache=1 active=0 N0=1 kernelpagesize_kB=4
+7f98e9da4000 default file=/lib/x86_64-linux-gnu/ld-2.23.so
+7f98e9da5000 default
+7fff267f2000 default stack anon=25 dirty=24 swapcache=1 active=18 N0=25 kernelpagesize_kB=4
+7fff26829000 default
+7fff2682c000 default
