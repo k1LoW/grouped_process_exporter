@@ -35,7 +35,6 @@ func (g *ProcStatusName) Collect(gpMap map[string]*grouped_proc.GroupedProc, ena
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%v\n", procs)
 
 	for _, proc := range procs {
 		status, err := proc.NewStatus()
