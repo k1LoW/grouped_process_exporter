@@ -24,8 +24,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
@@ -36,6 +36,8 @@ import (
 	"github.com/k1LoW/grouped_process_exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/prometheus/common/log"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -46,6 +48,9 @@ var (
 	nReStr      string
 	collectStat bool
 	collectIO   bool
+
+	format string
+	level  string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -66,9 +71,19 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectStat, collectIO)
+		baseLogger := log.Base()
+		err := baseLogger.SetLevel(level)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		}
+		err = baseLogger.SetFormat(format)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		}
+
+		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectStat, collectIO)
+		if err != nil {
+			log.Fatalln(err)
 		}
 		os.Exit(status)
 	},
@@ -78,9 +93,11 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	var g grouper.Grouper
 	switch groupType {
 	case "cgroup":
+		log.Infoln("Select cgroup grouper")
 		fsPath := "/sys/fs/cgroup"
 		g = cgroup.NewCgroup(fsPath)
-	case "name":
+	case "proc_status_name", "name":
+		log.Infoln("Select proc_status_name grouper")
 		g = proc_status_name.NewProcStatusName()
 	default:
 		return 1, errors.New("invalid grouping type")
@@ -96,20 +113,25 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	}
 	if collectStat {
 		collector.EnableMetric(metric.ProcStat)
+		log.Infoln("Enable Enable collecting /proc/[PID]/stat.")
 	}
 	if collectIO {
 		collector.EnableMetric(metric.ProcIO)
+		log.Infoln("Enable Enable collecting /proc/[PID]/io.")
 	}
 	prometheus.MustRegister(collector)
 	http.Handle(endpoint, promhttp.Handler())
-	log.Println(fmt.Sprintf("Starting exporter. %s%s", address, endpoint))
-	log.Fatal(http.ListenAndServe(address, nil))
+	log.Infoln("Starting grouped_process_exporter", version.Version)
+	log.Infoln(fmt.Sprintf("Listening on %s%s", address, endpoint))
+	if err := http.ListenAndServe(address, nil); err != nil {
+		return 1, err
+	}
 	return 0, nil
 }
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 		os.Exit(1)
 	}
 }
@@ -118,9 +140,14 @@ func init() {
 	rootCmd.Flags().StringVarP(&address, "telemetry.address", "", ":9644", "Address on which to expose metrics.")
 	rootCmd.Flags().StringVarP(&endpoint, "telemetry.endpoint", "", "/metrics", "Path under which to expose metrics.")
 	rootCmd.Flags().StringVarP(&groupType, "group.type", "", "cgroup", "Grouping type.")
-	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result `$1` as group name.")
+	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result $1 as group name.")
 	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
+
+	// copy from https://github.com/prometheus/common/blob/master/log/log.go#L57
+	rootCmd.Flags().StringVarP(&level, "log.level", "", logrus.New().Level.String(), "Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal]")
+	defaultFormat := url.URL{Scheme: "logger", Opaque: "stderr"}
+	rootCmd.Flags().StringVarP(&format, "log.format", "", defaultFormat.String(), `Set the log target and format. Example: "logger:syslog?appname=bob&local=7" or "logger:stdout?json=true"`)
 
 	rootCmd.Flags().BoolP("version", "v", false, "print the version")
 }
