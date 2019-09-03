@@ -93,9 +93,11 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	var g grouper.Grouper
 	switch groupType {
 	case "cgroup":
+		log.Infoln("Select cgroup grouper")
 		fsPath := "/sys/fs/cgroup"
 		g = cgroup.NewCgroup(fsPath)
-	case "name":
+	case "proc_status_name", "name":
+		log.Infoln("Select proc_status_name grouper")
 		g = proc_status_name.NewProcStatusName()
 	default:
 		return 1, errors.New("invalid grouping type")

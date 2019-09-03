@@ -1,12 +1,11 @@
 package collector
 
 import (
-	"fmt"
-
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
 	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/common/log"
 )
 
 type GroupedProcCollector struct {
@@ -32,8 +31,10 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled)
 	for group, proc := range c.GroupedProcs {
+		log.Debugf("Collect grouped process: %s: %#v\n", group, proc)
 		if !proc.Exists {
 			delete(c.GroupedProcs, group)
+			log.Debugf("Delete grouped process: %s\n", group)
 			continue
 		}
 		for key, metric := range proc.Metrics {
@@ -46,13 +47,6 @@ func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 			}
 		}
 		proc.Exists = false
-	}
-}
-
-func (c *GroupedProcCollector) Debug() {
-	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled)
-	for group, proc := range c.GroupedProcs {
-		fmt.Printf("%s: %#v\n", group, proc)
 	}
 }
 
