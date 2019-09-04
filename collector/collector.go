@@ -9,7 +9,7 @@ import (
 )
 
 type GroupedProcCollector struct {
-	GroupedProcs map[string]*grouped_proc.GroupedProc
+	GroupedProcs *grouped_proc.GroupedProcs
 	Metrics      map[metric.MetricKey]metric.Metric
 	Enabled      map[metric.MetricKey]bool
 	Grouper      grouper.Grouper
@@ -30,24 +30,25 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 
 func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled)
-	for group, proc := range c.GroupedProcs {
+	c.GroupedProcs.Range(func(group string, proc *grouped_proc.GroupedProc) bool {
 		log.Debugf("Collect grouped process: %s: %#v\n", group, proc)
 		if !proc.Exists {
-			delete(c.GroupedProcs, group)
+			c.GroupedProcs.Delete(group)
 			log.Debugf("Delete grouped process: %s\n", group)
-			continue
+			return true
 		}
 		for key, metric := range proc.Metrics {
 			if proc.Enabled[key] {
 				err := metric.PushCollected(ch, c.descs, c.Grouper.Name(), group)
 				if err != nil {
 					// TODO: metric.PushDefaultMetric(ch, c.descs, c.Grouper.Name(), group)
-					continue
+					return true
 				}
 			}
 		}
 		proc.Exists = false
-	}
+		return true
+	})
 }
 
 func (c *GroupedProcCollector) EnableMetric(metric metric.MetricKey) {
@@ -61,9 +62,9 @@ func (c *GroupedProcCollector) DisableMetric(metric metric.MetricKey) {
 // NewGroupedProcCollector
 func NewGroupedProcCollector(g grouper.Grouper) (*GroupedProcCollector, error) {
 	return &GroupedProcCollector{
-		GroupedProcs: make(map[string]*grouped_proc.GroupedProc),
+		GroupedProcs: grouped_proc.NewGroupedProcs(),
 		Metrics:      metric.AvairableMetrics(),
-		Enabled:      grouped_proc.DefaultEnabledMetrics(),
+		Enabled:      metric.DefaultEnabledMetrics(),
 		Grouper:      g,
 		descs:        make(map[string]*prometheus.Desc),
 	}, nil

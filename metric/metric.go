@@ -40,3 +40,12 @@ func AvairableMetrics() map[MetricKey]Metric {
 
 	return metrics
 }
+
+func DefaultEnabledMetrics() map[MetricKey]bool {
+	enabled := make(map[MetricKey]bool)
+	for _, k := range MetricKeys {
+		enabled[k] = false
+	}
+	enabled[ProcProcs] = true
+	return enabled
+}

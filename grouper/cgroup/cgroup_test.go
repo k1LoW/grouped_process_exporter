@@ -15,23 +15,23 @@ const (
 
 func TestCollect(t *testing.T) {
 	cgroup := testCgroup()
-	gpMap := make(map[string]*grouped_proc.GroupedProc)
+	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err := cgroup.Collect(gpMap, enabled)
+	err := cgroup.Collect(gprocs, enabled)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	if len(gpMap) != 2 {
-		t.Errorf("want %d, got %d", 2, len(gpMap))
+	if gprocs.Length() != 2 {
+		t.Errorf("want %d, got %d", 2, gprocs.Length())
 	}
-	if _, ok := gpMap["/system.slice/nginx.service"]; !ok {
+	if _, ok := gprocs.Load("/system.slice/nginx.service"); !ok {
 		t.Errorf("want %s, got none", "/system.slice/nginx.service")
 	}
-	if _, ok := gpMap["/system.slice/mysql.service"]; !ok {
+	if _, ok := gprocs.Load("/system.slice/mysql.service"); !ok {
 		t.Errorf("want %s, got none", "/system.slice/mysql.service")
 	}
 }
@@ -42,20 +42,20 @@ func TestCollectWithNormalize(t *testing.T) {
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
-	gpMap := make(map[string]*grouped_proc.GroupedProc)
+	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err = cgroup.Collect(gpMap, enabled)
+	err = cgroup.Collect(gprocs, enabled)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	if len(gpMap) != 1 {
-		t.Errorf("want %d, got %d", 1, len(gpMap))
+	if gprocs.Length() != 1 {
+		t.Errorf("want %d, got %d", 1, gprocs.Length())
 	}
-	if _, ok := gpMap["system.slice"]; !ok {
+	if _, ok := gprocs.Load("system.slice"); !ok {
 		t.Errorf("want %s, got none", "system.slice")
 	}
 }
