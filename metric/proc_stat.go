@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/procfs"
@@ -11,6 +12,7 @@ import (
 
 // ProcStatMetric is metric
 type ProcStatMetric struct {
+	sync.Mutex
 	metrics map[int]procfs.ProcStat
 	clkTck  float64
 }
@@ -90,7 +92,9 @@ func (m *ProcStatMetric) CollectFromProc(proc procfs.Proc) error {
 	if err != nil {
 		return err
 	}
+	m.Lock()
 	m.metrics[proc.PID] = stat
+	m.Unlock()
 	return nil
 }
 
@@ -108,6 +112,7 @@ func (m *ProcStatMetric) PushCollected(ch chan<- prometheus.Metric, descs map[st
 		vSize      float64
 		rss        float64
 	)
+	m.Lock()
 	for _, metric := range m.metrics {
 		minFlt = minFlt + float64(metric.MinFlt)
 		cMinFlt = cMinFlt + float64(metric.CMinFlt)
@@ -121,6 +126,7 @@ func (m *ProcStatMetric) PushCollected(ch chan<- prometheus.Metric, descs map[st
 		vSize = float64(metric.VSize)
 		rss = float64(metric.RSS)
 	}
+	m.Unlock()
 
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_minflt_total"], prometheus.CounterValue, minFlt, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_cminflt_total"], prometheus.CounterValue, cMinFlt, grouper, group)
