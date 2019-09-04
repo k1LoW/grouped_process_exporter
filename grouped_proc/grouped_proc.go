@@ -61,3 +61,42 @@ func (g *GroupedProc) AppendProcAndCollect(pid int) error {
 
 	return nil
 }
+
+type GroupedProcs struct {
+	sm sync.Map
+}
+
+func (m *GroupedProcs) Load(group string) (*GroupedProc, bool) {
+	gproc, ok := m.sm.Load(group)
+	if !ok {
+		return nil, false
+	}
+	return gproc.(*GroupedProc), true
+}
+
+func (m *GroupedProcs) Store(group string, gproc *GroupedProc) {
+	m.sm.Store(group, gproc)
+}
+
+func (m *GroupedProcs) Delete(group string) {
+	m.sm.Delete(group)
+}
+
+func (m *GroupedProcs) Range(f func(group string, gproc *GroupedProc) bool) {
+	m.sm.Range(func(key, value interface{}) bool {
+		return f(key.(string), value.(*GroupedProc))
+	})
+}
+
+func (m *GroupedProcs) Length() int {
+	l := 0
+	m.Range(func(group string, gproc *GroupedProc) bool {
+		l = l + 1
+		return true
+	})
+	return l
+}
+
+func NewGroupedProcs() *GroupedProcs {
+	return &GroupedProcs{}
+}

@@ -14,23 +14,23 @@ const (
 
 func TestCollect(t *testing.T) {
 	procStatusName := testProcStatusName()
-	gpMap := make(map[string]*grouped_proc.GroupedProc)
+	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err := procStatusName.Collect(gpMap, enabled)
+	err := procStatusName.Collect(gprocs, enabled)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	if len(gpMap) != 2 {
-		t.Errorf("want %d, got %d", 2, len(gpMap))
+	if gprocs.Length() != 2 {
+		t.Errorf("want %d, got %d", 2, gprocs.Length())
 	}
-	if _, ok := gpMap["nginx"]; !ok {
+	if _, ok := gprocs.Load("nginx"); !ok {
 		t.Errorf("want %s, got none", "nginx")
 	}
-	if _, ok := gpMap["mysqld"]; !ok {
+	if _, ok := gprocs.Load("mysqld"); !ok {
 		t.Errorf("want %s, got none", "mysqld")
 	}
 }
@@ -41,23 +41,23 @@ func TestCollectWithNormalize(t *testing.T) {
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
-	gpMap := make(map[string]*grouped_proc.GroupedProc)
+	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err = procStatusName.Collect(gpMap, enabled)
+	err = procStatusName.Collect(gprocs, enabled)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	if len(gpMap) != 2 {
-		t.Errorf("want %d, got %d", 2, len(gpMap))
+	if gprocs.Length() != 2 {
+		t.Errorf("want %d, got %d", 2, gprocs.Length())
 	}
-	if _, ok := gpMap["nginx"]; !ok {
+	if _, ok := gprocs.Load("nginx"); !ok {
 		t.Errorf("want %s, got none", "nginx")
 	}
-	if _, ok := gpMap["mysql"]; !ok {
+	if _, ok := gprocs.Load("mysql"); !ok {
 		t.Errorf("want %s, got none", "mysql")
 	}
 }
