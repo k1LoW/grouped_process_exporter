@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"sync"
+
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
 	"github.com/k1LoW/grouped_process_exporter/metric"
@@ -9,6 +11,7 @@ import (
 )
 
 type GroupedProcCollector struct {
+	sync.Mutex
 	GroupedProcs *grouped_proc.GroupedProcs
 	Metrics      map[metric.MetricKey]metric.Metric
 	Enabled      map[metric.MetricKey]bool
@@ -29,26 +32,30 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
+	c.Lock()
+	log.Debugln("Start collecting")
 	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled)
-	c.GroupedProcs.Range(func(group string, proc *grouped_proc.GroupedProc) bool {
-		log.Debugf("Collect grouped process: %s: %#v\n", group, proc)
-		if !proc.Exists {
+	c.GroupedProcs.Range(func(group string, gproc *grouped_proc.GroupedProc) bool {
+		log.Debugf("Collect grouped process: %s\n", group)
+		if !gproc.Exists {
 			c.GroupedProcs.Delete(group)
 			log.Debugf("Delete grouped process: %s\n", group)
 			return true
 		}
-		for key, metric := range proc.Metrics {
-			if proc.Enabled[key] {
+		for key, metric := range gproc.Metrics {
+			if gproc.Enabled[key] {
 				err := metric.PushCollected(ch, c.descs, c.Grouper.Name(), group)
 				if err != nil {
+					log.Errorf("Failed to push collected metrics: %v\n", err)
 					// TODO: metric.PushDefaultMetric(ch, c.descs, c.Grouper.Name(), group)
 					return true
 				}
 			}
 		}
-		proc.Exists = false
+		gproc.Exists = false
 		return true
 	})
+	c.Unlock()
 }
 
 func (c *GroupedProcCollector) EnableMetric(metric metric.MetricKey) {
