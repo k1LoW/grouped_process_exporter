@@ -64,7 +64,7 @@ func NewGroupedProcCollector(g grouper.Grouper) (*GroupedProcCollector, error) {
 	return &GroupedProcCollector{
 		GroupedProcs: grouped_proc.NewGroupedProcs(),
 		Metrics:      metric.AvairableMetrics(),
-		Enabled:      grouped_proc.DefaultEnabledMetrics(),
+		Enabled:      metric.DefaultEnabledMetrics(),
 		Grouper:      g,
 		descs:        make(map[string]*prometheus.Desc),
 	}, nil

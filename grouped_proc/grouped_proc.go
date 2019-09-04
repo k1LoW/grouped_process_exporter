@@ -29,15 +29,6 @@ func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	}
 }
 
-func DefaultEnabledMetrics() map[metric.MetricKey]bool {
-	enabled := make(map[metric.MetricKey]bool)
-	for _, k := range metric.MetricKeys {
-		enabled[k] = false
-	}
-	enabled[metric.ProcProcs] = true
-	return enabled
-}
-
 func (g *GroupedProc) AppendProcAndCollect(pid int) error {
 	fs, err := procfs.NewFS(g.ProcMountPoint)
 	if err != nil {
