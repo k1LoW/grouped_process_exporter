@@ -70,8 +70,8 @@ func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[
 		}
 		gproc.Exists = true
 		wg.Add(1)
-		go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
-			_ = g.AppendProcAndCollect(pid)
+		go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
+			_ = gproc.AppendProcAndCollect(pid)
 			wg.Done()
 		}(wg, pid, gproc)
 	}
