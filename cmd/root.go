@@ -37,6 +37,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/log"
+	promver "github.com/prometheus/common/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -119,8 +120,23 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 		collector.EnableMetric(metric.ProcIO)
 		log.Infoln("Enable Enable collecting /proc/[PID]/io.")
 	}
-	prometheus.MustRegister(collector)
-	http.Handle(endpoint, promhttp.Handler())
+
+	r := prometheus.NewRegistry()
+	r.MustRegister(promver.NewCollector("grouped_process_collector"))
+	if err := r.Register(collector); err != nil {
+		return 1, fmt.Errorf("couldn't register grouped_process_collector: %s", err)
+	}
+	handler := promhttp.HandlerFor(
+		prometheus.Gatherers{r},
+		promhttp.HandlerOpts{
+			ErrorLog:            log.NewErrorLogger(),
+			ErrorHandling:       promhttp.ContinueOnError,
+			MaxRequestsInFlight: 10,
+			Registry:            r,
+		},
+	)
+
+	http.Handle(endpoint, handler)
 	log.Infoln("Starting grouped_process_exporter", version.Version)
 	log.Infoln(fmt.Sprintf("Listening on %s%s", address, endpoint))
 	if err := http.ListenAndServe(address, nil); err != nil {
