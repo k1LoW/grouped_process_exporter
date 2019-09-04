@@ -1,12 +1,15 @@
 package metric
 
 import (
+	"sync"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/procfs"
 )
 
 // ProcIOMetric is metric
 type ProcIOMetric struct {
+	sync.Mutex
 	metrics map[int]procfs.ProcIO
 }
 
@@ -60,7 +63,9 @@ func (m *ProcIOMetric) CollectFromProc(proc procfs.Proc) error {
 	if err != nil {
 		return err
 	}
+	m.Lock()
 	m.metrics[proc.PID] = pio
+	m.Unlock()
 	return nil
 }
 
@@ -75,6 +80,7 @@ func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[stri
 		cancelledWriteBytes float64
 	)
 
+	m.Lock()
 	for _, metric := range m.metrics {
 		rChar = rChar + float64(metric.RChar)
 		wChar = wChar + float64(metric.WChar)
@@ -84,6 +90,7 @@ func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[stri
 		writeBytes = writeBytes + float64(metric.WriteBytes)
 		cancelledWriteBytes = cancelledWriteBytes + float64(metric.CancelledWriteBytes)
 	}
+	m.Unlock()
 
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char_total"], prometheus.CounterValue, rChar, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char_total"], prometheus.CounterValue, wChar, grouper, group)
