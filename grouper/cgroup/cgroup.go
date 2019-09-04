@@ -41,7 +41,7 @@ func (c *Cgroup) Name() string {
 	return "cgroup"
 }
 
-func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[metric.MetricKey]bool) error {
+func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool) error {
 	wg := &sync.WaitGroup{}
 
 	for _, s := range Subsystems {
@@ -68,11 +68,16 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 						_ = f.Close()
 						return nil
 					}
-					_, ok := gpMap[cPath]
+					var (
+						gproc *grouped_proc.GroupedProc
+						ok    bool
+					)
+					gproc, ok = gprocs.Load(cPath)
 					if !ok {
-						gpMap[cPath] = grouped_proc.NewGroupedProc(enabled)
+						gproc = grouped_proc.NewGroupedProc(enabled)
+						gprocs.Store(cPath, gproc)
 					}
-					gpMap[cPath].Exists = true
+					gproc.Exists = true
 					reader := bufio.NewReaderSize(f, 1028)
 					for {
 						line, _, err := reader.ReadLine()
@@ -92,7 +97,7 @@ func (c *Cgroup) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map
 						go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
 							_ = g.AppendProcAndCollect(pid)
 							wg.Done()
-						}(wg, pid, gpMap[cPath])
+						}(wg, pid, gproc)
 					}
 				}
 				return nil
