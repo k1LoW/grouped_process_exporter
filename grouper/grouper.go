@@ -8,5 +8,5 @@ import (
 type Grouper interface {
 	Name() string
 	SetNormalizeRegexp(nReStr string) error
-	Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[metric.MetricKey]bool) error
+	Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool) error
 }

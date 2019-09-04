@@ -25,7 +25,7 @@ func (g *ProcStatusName) Name() string {
 	return "proc_status_name"
 }
 
-func (g *ProcStatusName) Collect(gpMap map[string]*grouped_proc.GroupedProc, enabled map[metric.MetricKey]bool) error {
+func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool) error {
 	wg := &sync.WaitGroup{}
 	fs, err := procfs.NewFS(g.procMountPoint)
 	if err != nil {
@@ -59,16 +59,21 @@ func (g *ProcStatusName) Collect(gpMap map[string]*grouped_proc.GroupedProc, ena
 				name = matches[1]
 			}
 		}
-		_, ok := gpMap[name]
+		var (
+			gproc *grouped_proc.GroupedProc
+			ok    bool
+		)
+		gproc, ok = gprocs.Load(name)
 		if !ok {
-			gpMap[name] = grouped_proc.NewGroupedProc(enabled)
+			gproc = grouped_proc.NewGroupedProc(enabled)
+			gprocs.Store(name, gproc)
 		}
-		gpMap[name].Exists = true
+		gproc.Exists = true
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, pid int, g *grouped_proc.GroupedProc) {
 			_ = g.AppendProcAndCollect(pid)
 			wg.Done()
-		}(wg, pid, gpMap[name])
+		}(wg, pid, gproc)
 	}
 	wg.Wait()
 	return nil
