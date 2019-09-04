@@ -1,3 +1,7 @@
+## [v0.1.2](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.1...v0.1.2) (2019-09-04)
+
+* Fix metric/ concurrent map iteration and map write [#7](https://github.com/k1LoW/grouped_process_exporter/pull/7) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.1](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.0...v0.1.1) (2019-09-04)
 
 * Fix concurrent map (map[string]*grouped_proc.GroupedProc) writes [#6](https://github.com/k1LoW/grouped_process_exporter/pull/6) ([k1LoW](https://github.com/k1LoW))
