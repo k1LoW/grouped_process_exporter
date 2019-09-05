@@ -48,3 +48,6 @@ For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized
 | grouped_process_io_write_bytes_total | Counter | Total number of grouped /proc/[PID]/io.write_bytes |
 | grouped_process_io_cancelled_write_bytes_total | Counter | Total number of grouped /proc/[PID]/io.cancelled_write_bytes |
 
+## Alternatives
+
+- [process-exporter](https://github.com/ncabatoff/process-exporter): Prometheus exporter that mines /proc to report on selected processes
