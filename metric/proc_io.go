@@ -94,7 +94,7 @@ func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[stri
 
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char_total"], prometheus.CounterValue, rChar, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char_total"], prometheus.CounterValue, wChar, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r_total"], prometheus.CounterValue, syscW, grouper, group)
+	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r_total"], prometheus.CounterValue, syscR, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w_total"], prometheus.CounterValue, syscW, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes_total"], prometheus.CounterValue, readBytes, grouper, group)
 	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes_total"], prometheus.CounterValue, writeBytes, grouper, group)
