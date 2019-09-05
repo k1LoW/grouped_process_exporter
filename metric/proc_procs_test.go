@@ -63,7 +63,7 @@ func TestProcProcsCollectFromProc(t *testing.T) {
 			want float64
 		)
 		switch {
-		case strings.Contains(desc, "grouped_process_procs"):
+		case strings.Contains(desc, "grouped_process_num_procs"):
 			got = d.GetGauge().GetValue()
 			want = float64(len(pids))
 		default:
