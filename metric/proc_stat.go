@@ -122,9 +122,9 @@ func (m *ProcStatMetric) PushCollected(ch chan<- prometheus.Metric, descs map[st
 		sTime = sTime + float64(metric.STime)
 		cUTime = cUTime + float64(metric.CUTime)
 		cSTime = cSTime + float64(metric.CSTime)
-		numThreads = float64(metric.NumThreads)
-		vSize = float64(metric.VSize)
-		rss = float64(metric.RSS)
+		numThreads = numThreads + float64(metric.NumThreads)
+		vSize = vSize + float64(metric.VSize)
+		rss = rss + float64(metric.RSS)
 	}
 	m.Unlock()
 
