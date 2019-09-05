@@ -1,3 +1,7 @@
+## [v0.1.4](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.3...v0.1.4) (2019-09-05)
+
+* Fix proc_stat_numthreads/proc_stat_vsize/proc_stat_rss calc bug [#9](https://github.com/k1LoW/grouped_process_exporter/pull/9) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.3](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.2...v0.1.3) (2019-09-04)
 
 * Fix collector concurrent bug [#8](https://github.com/k1LoW/grouped_process_exporter/pull/8) ([k1LoW](https://github.com/k1LoW))
