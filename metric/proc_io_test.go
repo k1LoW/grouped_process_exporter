@@ -9,10 +9,6 @@ import (
 	"github.com/prometheus/procfs"
 )
 
-const (
-	testProcPath = "../testdata/proc"
-)
-
 func TestProcIOMetric(t *testing.T) {
 	m := NewProcIOMetric()
 	descs := m.Describe()
