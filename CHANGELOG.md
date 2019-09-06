@@ -1,3 +1,7 @@
+## [v0.2.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.5...v0.2.0) (2019-09-05)
+
+* Change desc `grouped_process_procs` to `grouped_process_num_procs` [#11](https://github.com/k1LoW/grouped_process_exporter/pull/11) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.5](https://github.com/k1LoW/grouped_process_exporter/compare/v0.1.4...v0.1.5) (2019-09-05)
 
 * Fix proc_io_syscw calc bug [#10](https://github.com/k1LoW/grouped_process_exporter/pull/10) ([k1LoW](https://github.com/k1LoW))
