@@ -2,13 +2,8 @@ package proc_status_name
 
 import (
 	"errors"
-	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"regexp"
-	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
@@ -42,16 +37,12 @@ func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[
 			// TODO: Log
 			continue
 		}
-		pid := proc.PID
-
 		// collect process only
-		b, err := ioutil.ReadFile(filepath.Join(g.procMountPoint, strconv.Itoa(pid), "status"))
-		if err != nil {
+		if status.PID != status.TGID {
 			continue
 		}
-		if !strings.Contains(string(b), fmt.Sprintf("Tgid:\t%d", pid)) {
-			continue
-		}
+
+		pid := proc.PID
 		name := status.Name
 		if g.nRe != nil {
 			matches := g.nRe.FindStringSubmatch(name)
