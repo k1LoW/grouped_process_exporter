@@ -60,6 +60,30 @@ func TestCollectWithNormalize(t *testing.T) {
 	}
 }
 
+func TestCollectWithExclude(t *testing.T) {
+	cgroup := testCgroup()
+	err := cgroup.SetExcludeRegexp("my.+")
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	gprocs := grouped_proc.NewGroupedProcs()
+	enabled := make(map[metric.MetricKey]bool)
+
+	enabled[metric.ProcIO] = true
+	enabled[metric.ProcStat] = true
+	err = cgroup.Collect(gprocs, enabled)
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	if gprocs.Length() != 1 {
+		t.Errorf("want %d, got %d", 1, gprocs.Length())
+	}
+	if _, ok := gprocs.Load("/system.slice/nginx.service"); !ok {
+		t.Errorf("want %s, got none", "/system.slice/nginx.service")
+	}
+}
+
 func testCgroup() *Cgroup {
 	os.Setenv("GROUPED_PROCESS_PROC_MOUNT_POINT", testProcPath)
 	return NewCgroup(testCgroupPath)

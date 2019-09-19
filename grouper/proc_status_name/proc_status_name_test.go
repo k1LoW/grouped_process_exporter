@@ -62,6 +62,33 @@ func TestCollectWithNormalize(t *testing.T) {
 	}
 }
 
+func TestCollectWithExclude(t *testing.T) {
+	procStatusName := testProcStatusName()
+	err := procStatusName.SetExcludeRegexp("my.+")
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	gprocs := grouped_proc.NewGroupedProcs()
+	enabled := make(map[metric.MetricKey]bool)
+
+	enabled[metric.ProcIO] = true
+	enabled[metric.ProcStat] = true
+	err = procStatusName.Collect(gprocs, enabled)
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	if gprocs.Length() != 1 {
+		t.Errorf("want %d, got %d", 1, gprocs.Length())
+	}
+	if _, ok := gprocs.Load("nginx"); !ok {
+		t.Errorf("want %s, got none", "nginx")
+	}
+	if _, ok := gprocs.Load("mysqld"); ok {
+		t.Errorf("want nont, got %s", "mysqld")
+	}
+}
+
 func testProcStatusName() *ProcStatusName {
 	os.Setenv("GROUPED_PROCESS_PROC_MOUNT_POINT", testProcPath)
 	return NewProcStatusName()

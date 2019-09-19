@@ -13,6 +13,7 @@ import (
 
 type ProcStatusName struct {
 	nRe            *regexp.Regexp
+	eRe            *regexp.Regexp
 	procMountPoint string
 }
 
@@ -44,6 +45,11 @@ func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[
 
 		pid := proc.PID
 		name := status.Name
+		if g.eRe != nil {
+			if g.eRe.MatchString(name) {
+				continue
+			}
+		}
 		if g.nRe != nil {
 			matches := g.nRe.FindStringSubmatch(name)
 			if len(matches) > 1 {
@@ -82,6 +88,18 @@ func (g *ProcStatusName) SetNormalizeRegexp(nReStr string) error {
 		return errors.New("number of parenthesized subexpressions in this regexp should be 1")
 	}
 	g.nRe = nRe
+	return nil
+}
+
+func (g *ProcStatusName) SetExcludeRegexp(eReStr string) error {
+	if eReStr == "" {
+		return nil
+	}
+	eRe, err := regexp.Compile(eReStr)
+	if err != nil {
+		return err
+	}
+	g.eRe = eRe
 	return nil
 }
 
