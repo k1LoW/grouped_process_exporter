@@ -47,6 +47,7 @@ var (
 	endpoint    string
 	groupType   string
 	nReStr      string
+	eReStr      string
 	collectStat bool
 	collectIO   bool
 
@@ -157,6 +158,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&endpoint, "telemetry.endpoint", "", "/metrics", "Path under which to expose metrics.")
 	rootCmd.Flags().StringVarP(&groupType, "group.type", "", "cgroup", "Grouping type.")
 	rootCmd.Flags().StringVarP(&nReStr, "group.normalize", "", "", "Regexp for normalize group names. Exporter use regexp match result $1 as group name.")
+	rootCmd.Flags().StringVarP(&eReStr, "group.exclude", "", "", "Regexp for exclude group names. Exporter exclude group using regexp match before group name normalization")
 	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
 

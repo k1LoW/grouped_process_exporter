@@ -35,6 +35,7 @@ var Subsystems = []string{
 type Cgroup struct {
 	fsPath string
 	nRe    *regexp.Regexp
+	eRe    *regexp.Regexp
 }
 
 func (c *Cgroup) Name() string {
@@ -56,6 +57,11 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			}
 			if f.IsDir() {
 				cPath := strings.Replace(path, searchDir, "", 1)
+				if c.eRe != nil {
+					if c.eRe.MatchString(cPath) {
+						return nil
+					}
+				}
 				if c.nRe != nil {
 					matches := c.nRe.FindStringSubmatch(cPath)
 					if len(matches) > 1 {
@@ -125,6 +131,18 @@ func (c *Cgroup) SetNormalizeRegexp(nReStr string) error {
 		return errors.New("number of parenthesized subexpressions in this regexp should be 1")
 	}
 	c.nRe = nRe
+	return nil
+}
+
+func (c *Cgroup) SetExcludeRegexp(eReStr string) error {
+	if eReStr == "" {
+		return nil
+	}
+	eRe, err := regexp.Compile(eReStr)
+	if err != nil {
+		return err
+	}
+	c.eRe = eRe
 	return nil
 }
 

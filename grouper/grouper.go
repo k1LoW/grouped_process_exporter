@@ -8,5 +8,6 @@ import (
 type Grouper interface {
 	Name() string
 	SetNormalizeRegexp(nReStr string) error
+	SetExcludeRegexp(eReStr string) error
 	Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool) error
 }
