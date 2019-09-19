@@ -1,3 +1,7 @@
+## [v0.4.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.3.0...v0.4.0) (2019-09-19)
+
+* Add `--group.exclude` option for exclude group using regexp [#13](https://github.com/k1LoW/grouped_process_exporter/pull/13) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.3.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.2.0...v0.3.0) (2019-09-17)
 
 * Use prometheus/procfs v0.0.5 [#12](https://github.com/k1LoW/grouped_process_exporter/pull/12) ([k1LoW](https://github.com/k1LoW))
