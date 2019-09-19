@@ -11,13 +11,13 @@
 
 Exporter normalize group names using regexp `--group.normalize` option.
 
-For example, by setting `--group.normalize='^.+(tcpdp).+$'`, Exporter normalized the group names `/path/to/tcpdp-eth0` and `/path/to/tcpdp-eth1` to `tcpdp`.
+For example, by setting `--group.normalize='^.+(tcpdp).+$'`, exporter normaliz the group names `/path/to/tcpdp-eth0` and `/path/to/tcpdp-eth1` to `tcpdp`.
 
 #### `--group.exclude`
 
 Exporter exclude group using regexp `--group.exclude` option.
 
-For example, by setting `--group.exclude='user.\slice'`, Exporter exclude the group names `/user.slice` , `/user.slice/user-10503.slice`.
+For example, by setting `--group.exclude='user.\slice'`, exporter exclude the group names `/user.slice` , `/user.slice/user-10503.slice`.
 
 > Exporter exclude group before group name normalization.
 
