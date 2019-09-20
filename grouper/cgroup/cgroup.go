@@ -53,14 +53,17 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
 
 		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
-			sem.Acquire(ctx, 2)
-			defer sem.Release(2)
 			if err != nil {
 				return nil
 			}
 			if f == nil {
 				return nil
 			}
+			err = sem.Acquire(ctx, 2)
+			if err != nil {
+				return err
+			}
+			defer sem.Release(2)
 			if f.IsDir() {
 				cPath := strings.Replace(path, searchDir, "", 1)
 				if c.eRe != nil {
@@ -104,9 +107,12 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 							_ = f.Close()
 							return err
 						}
-
+						err = sem.Acquire(ctx, gproc.RequiredWeight)
+						if err != nil {
+							_ = f.Close()
+							return err
+						}
 						wg.Add(1)
-						sem.Acquire(ctx, gproc.RequiredWeight)
 						go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
 							_ = gproc.AppendProcAndCollect(pid)
 							sem.Release(gproc.RequiredWeight)
