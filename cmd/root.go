@@ -93,6 +93,7 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalln(err)
 		}
+		log.Infoln("Stopped grouped_process_exporter")
 		os.Exit(status)
 	},
 }
