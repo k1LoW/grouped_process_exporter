@@ -14,6 +14,7 @@ type GroupedProc struct {
 	Enabled        map[metric.MetricKey]bool
 	Exists         bool
 	ProcMountPoint string
+	RequiredWeight int64
 }
 
 func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
@@ -21,12 +22,22 @@ func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	if procMountPoint == "" {
 		procMountPoint = procfs.DefaultMountPoint
 	}
-	return &GroupedProc{
+
+	g := GroupedProc{
 		Enabled:        enabled,
 		Metrics:        metric.AvairableMetrics(),
 		Exists:         true,
 		ProcMountPoint: procMountPoint,
 	}
+	w := int64(0)
+	for _, k := range metric.MetricKeys {
+		if g.Enabled[k] {
+			w = w + g.Metrics[k].RequiredWeight()
+		}
+	}
+	g.RequiredWeight = w
+
+	return &g
 }
 
 func (g *GroupedProc) AppendProcAndCollect(pid int) error {

@@ -6,6 +6,7 @@ import (
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/metric"
+	"golang.org/x/sync/semaphore"
 )
 
 const (
@@ -17,10 +18,11 @@ func TestCollect(t *testing.T) {
 	cgroup := testCgroup()
 	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
+	sem := semaphore.NewWeighted(5)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err := cgroup.Collect(gprocs, enabled)
+	err := cgroup.Collect(gprocs, enabled, sem)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
@@ -44,10 +46,11 @@ func TestCollectWithNormalize(t *testing.T) {
 	}
 	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
+	sem := semaphore.NewWeighted(5)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err = cgroup.Collect(gprocs, enabled)
+	err = cgroup.Collect(gprocs, enabled, sem)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
@@ -68,10 +71,11 @@ func TestCollectWithExclude(t *testing.T) {
 	}
 	gprocs := grouped_proc.NewGroupedProcs()
 	enabled := make(map[metric.MetricKey]bool)
+	sem := semaphore.NewWeighted(5)
 
 	enabled[metric.ProcIO] = true
 	enabled[metric.ProcStat] = true
-	err = cgroup.Collect(gprocs, enabled)
+	err = cgroup.Collect(gprocs, enabled, sem)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}

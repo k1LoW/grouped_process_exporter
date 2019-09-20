@@ -103,6 +103,10 @@ func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[stri
 	return nil
 }
 
+func (m *ProcIOMetric) RequiredWeight() int64 {
+	return 1
+}
+
 func NewProcIOMetric() *ProcIOMetric {
 	return &ProcIOMetric{
 		metrics: make(map[int]procfs.ProcIO),
