@@ -43,6 +43,10 @@ func (m *ProcProcsMetric) PushCollected(ch chan<- prometheus.Metric, descs map[s
 	return nil
 }
 
+func (m *ProcProcsMetric) RequiredWeight() int64 {
+	return 0
+}
+
 func NewProcProcsMetric() *ProcProcsMetric {
 	return &ProcProcsMetric{
 		metrics: make(map[int]struct{}),

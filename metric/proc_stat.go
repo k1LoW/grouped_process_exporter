@@ -152,6 +152,10 @@ func NewProcStatMetric() *ProcStatMetric {
 	}
 }
 
+func (m *ProcStatMetric) RequiredWeight() int64 {
+	return 1
+}
+
 // ClkTck return clocks per sec (CLK_TCK)
 func ClkTck() float64 {
 	tck := float64(128)

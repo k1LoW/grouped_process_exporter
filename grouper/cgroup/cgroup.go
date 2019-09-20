@@ -2,6 +2,7 @@ package cgroup
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"io"
 	"os"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/metric"
+	"golang.org/x/sync/semaphore"
 )
 
 // Subsystems cgroups subsystems list
@@ -42,8 +44,10 @@ func (c *Cgroup) Name() string {
 	return "cgroup"
 }
 
-func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool) error {
+func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.MetricKey]bool, sem *semaphore.Weighted) error {
 	wg := &sync.WaitGroup{}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	for _, s := range Subsystems {
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
@@ -55,6 +59,11 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			if f == nil {
 				return nil
 			}
+			err = sem.Acquire(ctx, 2)
+			if err != nil {
+				return err
+			}
+			defer sem.Release(2)
 			if f.IsDir() {
 				cPath := strings.Replace(path, searchDir, "", 1)
 				if c.eRe != nil {
@@ -98,10 +107,15 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 							_ = f.Close()
 							return err
 						}
-
+						err = sem.Acquire(ctx, gproc.RequiredWeight)
+						if err != nil {
+							_ = f.Close()
+							return err
+						}
 						wg.Add(1)
 						go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
 							_ = gproc.AppendProcAndCollect(pid)
+							sem.Release(gproc.RequiredWeight)
 							wg.Done()
 						}(wg, pid, gproc)
 					}

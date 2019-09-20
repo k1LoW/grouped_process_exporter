@@ -10,6 +10,7 @@ type Metric interface {
 	String() string
 	CollectFromProc(proc procfs.Proc) error
 	PushCollected(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error
+	RequiredWeight() int64
 }
 
 type MetricKey string
