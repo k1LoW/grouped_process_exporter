@@ -27,6 +27,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
@@ -40,6 +41,11 @@ import (
 	promver "github.com/prometheus/common/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+)
+
+const (
+	srvReadTimeout  = 10 * time.Second
+	srvWriteTimeout = 5 * time.Second
 )
 
 var (
@@ -87,6 +93,7 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalln(err)
 		}
+		log.Infoln("Stopped grouped_process_exporter")
 		os.Exit(status)
 	},
 }
@@ -127,6 +134,13 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	if err := r.Register(collector); err != nil {
 		return 1, fmt.Errorf("couldn't register grouped_process_collector: %s", err)
 	}
+
+	srv := &http.Server{
+		Addr:         address,
+		ReadTimeout:  srvReadTimeout,
+		WriteTimeout: srvWriteTimeout,
+	}
+
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{r},
 		promhttp.HandlerOpts{
@@ -140,7 +154,7 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 	http.Handle(endpoint, handler)
 	log.Infoln("Starting grouped_process_exporter", version.Version)
 	log.Infoln(fmt.Sprintf("Listening on %s%s", address, endpoint))
-	if err := http.ListenAndServe(address, nil); err != nil {
+	if err := srv.ListenAndServe(); err != nil {
 		return 1, err
 	}
 	return 0, nil
