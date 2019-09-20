@@ -1,3 +1,8 @@
+## [v0.5.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.4.0...v0.5.0) (2019-09-20)
+
+* Add semaphore for restrict number of open files [#15](https://github.com/k1LoW/grouped_process_exporter/pull/15) ([k1LoW](https://github.com/k1LoW))
+* Add http server timeout [#14](https://github.com/k1LoW/grouped_process_exporter/pull/14) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.4.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.3.0...v0.4.0) (2019-09-19)
 
 * Add `--group.exclude` option for exclude group using regexp [#13](https://github.com/k1LoW/grouped_process_exporter/pull/13) ([k1LoW](https://github.com/k1LoW))
