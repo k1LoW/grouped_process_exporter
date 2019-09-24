@@ -89,7 +89,7 @@ var rootCmd = &cobra.Command{
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 		}
 
-		status, err := runRoot(args, address, endpoint, groupType, nReStr, collectStat, collectIO)
+		status, err := runRoot(args, address, endpoint, groupType, nReStr, eReStr, collectStat, collectIO)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -98,7 +98,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func runRoot(args []string, address, endpoint, groupType, nReStr string, collectStat, collectIO bool) (int, error) {
+func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string, collectStat, collectIO bool) (int, error) {
 	var g grouper.Grouper
 	switch groupType {
 	case "cgroup":
@@ -112,6 +112,10 @@ func runRoot(args []string, address, endpoint, groupType, nReStr string, collect
 		return 1, errors.New("invalid grouping type")
 	}
 	err := g.SetNormalizeRegexp(nReStr)
+	if err != nil {
+		return 1, err
+	}
+	err = g.SetExcludeRegexp(eReStr)
 	if err != nil {
 		return 1, err
 	}
