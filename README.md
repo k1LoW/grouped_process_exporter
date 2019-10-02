@@ -21,7 +21,7 @@ For example, by setting `--group.exclude='user.\slice'`, the exporter excludes t
 
 > Note: the exporter excludes group before group name normalization.
 
-## Avairable Metrics
+## Available Metrics
 
 ### Amount of grouped procs ( default on )
 
