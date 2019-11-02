@@ -1,4 +1,4 @@
-# Exporter for grouped process [![GitHub release](https://img.shields.io/github/release/k1LoW/grouped_process_exporter.svg)](https://github.com/k1LoW/grouped_process_exporter/releases) [![GitHub Actions](https://action-badges.now.sh/k1LoW/grouped_process_exporter)](https://github.com/k1LoW/grouped_process_exporter/actions) [![codecov](https://codecov.io/gh/k1LoW/grouped_process_exporter/branch/master/graph/badge.svg)](https://codecov.io/gh/k1LoW/grouped_process_exporter)
+# Exporter for grouped process [![Build Status](https://github.com/k1LoW/grouped_process_exporter/workflows/build/badge.svg)](https://github.com/k1LoW/grouped_process_exporter/actions) [![GitHub release](https://img.shields.io/github/release/k1LoW/grouped_process_exporter.svg)](https://github.com/k1LoW/grouped_process_exporter/releases) [![codecov](https://codecov.io/gh/k1LoW/grouped_process_exporter/branch/master/graph/badge.svg)](https://codecov.io/gh/k1LoW/grouped_process_exporter)
 
 ## Supported grouping
 
