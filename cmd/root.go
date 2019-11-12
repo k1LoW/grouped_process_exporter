@@ -126,11 +126,11 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	}
 	if collectStat {
 		collector.EnableMetric(metric.ProcStat)
-		log.Infoln("Enable Enable collecting /proc/[PID]/stat.")
+		log.Infoln("Enable collecting /proc/[PID]/stat.")
 	}
 	if collectIO {
 		collector.EnableMetric(metric.ProcIO)
-		log.Infoln("Enable Enable collecting /proc/[PID]/io.")
+		log.Infoln("Enable collecting /proc/[PID]/io.")
 	}
 
 	r := prometheus.NewRegistry()
