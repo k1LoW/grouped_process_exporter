@@ -62,6 +62,7 @@ func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 		gproc.Exists = false
 		return true
 	})
+	log.Debugln("Collecting finished")
 	c.Unlock()
 }
 
