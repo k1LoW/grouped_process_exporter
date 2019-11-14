@@ -1,3 +1,4 @@
+.go-version
 dist/
 coverage.txt
 grouped_process_exporter
