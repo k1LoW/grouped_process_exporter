@@ -1,3 +1,12 @@
+## [v0.6.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.5.1...v0.6.0) (2019-11-14)
+
+* Resolve cgroup subsystem symlinks [#22](https://github.com/k1LoW/grouped_process_exporter/pull/22) ([k1LoW](https://github.com/k1LoW))
+* Fix `--cgroup.subsystem` option type [#21](https://github.com/k1LoW/grouped_process_exporter/pull/21) ([k1LoW](https://github.com/k1LoW))
+* Add `--cgroup.subsystem` option to set cgroup subsystem to scan [#20](https://github.com/k1LoW/grouped_process_exporter/pull/20) ([k1LoW](https://github.com/k1LoW))
+* Update prometheus/procfs to v0.0.6 [#19](https://github.com/k1LoW/grouped_process_exporter/pull/19) ([k1LoW](https://github.com/k1LoW))
+* README.md: fix typo [#18](https://github.com/k1LoW/grouped_process_exporter/pull/18) ([perlun](https://github.com/perlun))
+* README.md: minor English and grammar improvements [#17](https://github.com/k1LoW/grouped_process_exporter/pull/17) ([perlun](https://github.com/perlun))
+
 ## [v0.5.1](https://github.com/k1LoW/grouped_process_exporter/compare/v0.5.0...v0.5.1) (2019-09-24)
 
 * Fix: Set --group.exclude to grouper [#16](https://github.com/k1LoW/grouped_process_exporter/pull/16) ([k1LoW](https://github.com/k1LoW))
