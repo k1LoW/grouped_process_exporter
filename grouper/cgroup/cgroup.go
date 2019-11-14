@@ -17,8 +17,8 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-// Subsystems cgroups subsystems list
-var Subsystems = []string{
+// DefaultSubsystems cgroups subsystems default list
+var DefaultSubsystems = []string{
 	"cpuset",
 	"cpu",
 	"cpuacct",
@@ -35,9 +35,10 @@ var Subsystems = []string{
 }
 
 type Cgroup struct {
-	fsPath string
-	nRe    *regexp.Regexp
-	eRe    *regexp.Regexp
+	fsPath     string
+	subsystems []string
+	nRe        *regexp.Regexp
+	eRe        *regexp.Regexp
 }
 
 func (c *Cgroup) Name() string {
@@ -49,7 +50,7 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	for _, s := range Subsystems {
+	for _, s := range c.subsystems {
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
 
 		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
@@ -161,8 +162,13 @@ func (c *Cgroup) SetExcludeRegexp(eReStr string) error {
 }
 
 // NewCgroup
-func NewCgroup(fsPath string) *Cgroup {
+func NewCgroup(fsPath string, subsystems []string) *Cgroup {
+	if len(subsystems) == 0 {
+		subsystems = DefaultSubsystems
+	}
+
 	return &Cgroup{
-		fsPath: fsPath,
+		fsPath:     fsPath,
+		subsystems: subsystems,
 	}
 }
