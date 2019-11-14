@@ -57,7 +57,8 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 		path := filepath.Clean(filepath.Join(c.fsPath, s))
 		f, err := os.Lstat(path)
 		if err != nil {
-			return err
+			log.Debugf("%s\n", err)
+			continue
 		}
 		if f.Mode()&os.ModeSymlink == os.ModeSymlink {
 			realpath, err := filepath.EvalSymlinks(path)
