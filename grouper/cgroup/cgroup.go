@@ -67,12 +67,12 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			}
 			defer sem.Release(2)
 			if !f.IsDir() {
-				return nil
+				return filepath.SkipDir
 			}
 			cPath := strings.Replace(path, searchDir, "", 1)
 			if c.eRe != nil {
 				if c.eRe.MatchString(cPath) {
-					return nil
+					return filepath.SkipDir
 				}
 			}
 			if c.nRe != nil {
