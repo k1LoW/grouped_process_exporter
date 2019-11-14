@@ -52,7 +52,32 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 	defer cancel()
 
 	log.Debugf("Cgroup subsystems %s\n", c.subsystems)
+	realSubsystems := []string{}
 	for _, s := range c.subsystems {
+		path := filepath.Clean(filepath.Join(c.fsPath, s))
+		f, err := os.Lstat(path)
+		if err != nil {
+			log.Debugf("%s\n", err)
+			continue
+		}
+		if f.Mode()&os.ModeSymlink == os.ModeSymlink {
+			realpath, err := filepath.EvalSymlinks(path)
+			if err != nil {
+				return err
+			}
+			f, err = os.Lstat(realpath)
+			if err != nil {
+				return err
+			}
+			path = realpath
+		}
+		if f.IsDir() && !contains(realSubsystems, filepath.Base(path)) {
+			realSubsystems = append(realSubsystems, filepath.Base(path))
+		}
+	}
+	log.Debugf("Resolve symlinks %s\n", realSubsystems)
+
+	for _, s := range realSubsystems {
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
 		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
 			if err != nil {
@@ -172,4 +197,13 @@ func NewCgroup(fsPath string, subsystems []string) *Cgroup {
 		fsPath:     fsPath,
 		subsystems: subsystems,
 	}
+}
+
+func contains(s []string, e string) bool {
+	for _, v := range s {
+		if e == v {
+			return true
+		}
+	}
+	return false
 }
