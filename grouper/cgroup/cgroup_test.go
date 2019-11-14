@@ -88,7 +88,32 @@ func TestCollectWithExclude(t *testing.T) {
 	}
 }
 
+func TestEnableSubsystems(t *testing.T) {
+	os.Setenv("GROUPED_PROCESS_PROC_MOUNT_POINT", testProcPath)
+	cgroup := NewCgroup(testCgroupPath, []string{"systemd"})
+	gprocs := grouped_proc.NewGroupedProcs()
+	enabled := make(map[metric.MetricKey]bool)
+	sem := semaphore.NewWeighted(5)
+	err := cgroup.Collect(gprocs, enabled, sem)
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	if gprocs.Length() != 3 {
+		t.Errorf("want %d, got %d", 3, gprocs.Length())
+	}
+	if _, ok := gprocs.Load("/system.slice/nginx.service"); !ok {
+		t.Errorf("want %s, got none", "/system.slice/nginx.service")
+	}
+	if _, ok := gprocs.Load("/system.slice/mysql.service"); !ok {
+		t.Errorf("want %s, got none", "/system.slice/mysql.service")
+	}
+	if _, ok := gprocs.Load("/system.slice/systemd-only.service"); !ok {
+		t.Errorf("want %s, got none", "/system.slice/systemd-only.service")
+	}
+}
+
 func testCgroup() *Cgroup {
 	os.Setenv("GROUPED_PROCESS_PROC_MOUNT_POINT", testProcPath)
-	return NewCgroup(testCgroupPath)
+	return NewCgroup(testCgroupPath, []string{})
 }
