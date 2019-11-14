@@ -180,7 +180,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&eReStr, "group.exclude", "", "", "Regexp for exclude group names. Exporter exclude group using regexp match before group name normalization")
 	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
-	rootCmd.Flags().StringSliceVarP(&subsystems, "cgroup.subsystem", "", []string{}, fmt.Sprintf("Cgroup subsystem to scan. (default %s)", cgroup.DefaultSubsystems))
+	rootCmd.Flags().StringArrayVarP(&subsystems, "cgroup.subsystem", "", []string{}, fmt.Sprintf("Cgroup subsystem to scan. (default %s)", cgroup.DefaultSubsystems))
 
 	// copy from https://github.com/prometheus/common/blob/master/log/log.go#L57
 	rootCmd.Flags().StringVarP(&level, "log.level", "", logrus.New().Level.String(), "Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal]")

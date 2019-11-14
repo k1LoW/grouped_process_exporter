@@ -14,6 +14,7 @@ import (
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/metric"
+	"github.com/prometheus/common/log"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -50,9 +51,9 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	log.Debugf("Cgroup subsystems %s\n", c.subsystems)
 	for _, s := range c.subsystems {
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))
-
 		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
 			if err != nil {
 				return nil
@@ -65,63 +66,63 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 				return err
 			}
 			defer sem.Release(2)
-			if f.IsDir() {
-				cPath := strings.Replace(path, searchDir, "", 1)
-				if c.eRe != nil {
-					if c.eRe.MatchString(cPath) {
-						return nil
-					}
+			if !f.IsDir() {
+				return nil
+			}
+			cPath := strings.Replace(path, searchDir, "", 1)
+			if c.eRe != nil {
+				if c.eRe.MatchString(cPath) {
+					return nil
 				}
-				if c.nRe != nil {
-					matches := c.nRe.FindStringSubmatch(cPath)
-					if len(matches) > 1 {
-						cPath = matches[1]
-					}
+			}
+			if c.nRe != nil {
+				matches := c.nRe.FindStringSubmatch(cPath)
+				if len(matches) > 1 {
+					cPath = matches[1]
 				}
-				if cPath != "" {
-					f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
+			}
+			if cPath != "" {
+				f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
+				if err != nil {
+					_ = f.Close()
+					return nil
+				}
+				var (
+					gproc *grouped_proc.GroupedProc
+					ok    bool
+				)
+				gproc, ok = gprocs.Load(cPath)
+				if !ok {
+					gproc = grouped_proc.NewGroupedProc(enabled)
+					gprocs.Store(cPath, gproc)
+				}
+				gproc.Exists = true
+				reader := bufio.NewReaderSize(f, 1028)
+				for {
+					line, _, err := reader.ReadLine()
+					if err == io.EOF {
+						break
+					} else if err != nil {
+						_ = f.Close()
+						return err
+					}
+					pid, err := strconv.Atoi(string(line))
 					if err != nil {
 						_ = f.Close()
-						return nil
+						return err
 					}
-					var (
-						gproc *grouped_proc.GroupedProc
-						ok    bool
-					)
-					gproc, ok = gprocs.Load(cPath)
-					if !ok {
-						gproc = grouped_proc.NewGroupedProc(enabled)
-						gprocs.Store(cPath, gproc)
+					err = sem.Acquire(ctx, gproc.RequiredWeight)
+					if err != nil {
+						_ = f.Close()
+						return err
 					}
-					gproc.Exists = true
-					reader := bufio.NewReaderSize(f, 1028)
-					for {
-						line, _, err := reader.ReadLine()
-						if err == io.EOF {
-							break
-						} else if err != nil {
-							_ = f.Close()
-							return err
-						}
-						pid, err := strconv.Atoi(string(line))
-						if err != nil {
-							_ = f.Close()
-							return err
-						}
-						err = sem.Acquire(ctx, gproc.RequiredWeight)
-						if err != nil {
-							_ = f.Close()
-							return err
-						}
-						wg.Add(1)
-						go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
-							_ = gproc.AppendProcAndCollect(pid)
-							sem.Release(gproc.RequiredWeight)
-							wg.Done()
-						}(wg, pid, gproc)
-					}
+					wg.Add(1)
+					go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
+						_ = gproc.AppendProcAndCollect(pid)
+						sem.Release(gproc.RequiredWeight)
+						wg.Done()
+					}(wg, pid, gproc)
 				}
-				return nil
 			}
 			return nil
 		})
