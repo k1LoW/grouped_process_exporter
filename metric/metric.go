@@ -16,9 +16,10 @@ type Metric interface {
 type MetricKey string
 
 var (
-	ProcProcs MetricKey = "proc_procs"
-	ProcStat  MetricKey = "proc_stat"
-	ProcIO    MetricKey = "proc_io"
+	ProcProcs  MetricKey = "proc_procs"
+	ProcStat   MetricKey = "proc_stat"
+	ProcIO     MetricKey = "proc_io"
+	ProcStatus MetricKey = "proc_status"
 )
 
 var MetricKeys = []MetricKey{
@@ -38,6 +39,9 @@ func AvairableMetrics() map[MetricKey]Metric {
 
 	// io
 	metrics[ProcIO] = NewProcIOMetric()
+
+	// status
+	metrics[ProcStatus] = NewProcStatusMetric()
 
 	return metrics
 }

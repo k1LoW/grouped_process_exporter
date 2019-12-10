@@ -58,6 +58,31 @@ For example, by setting `--group.exclude='user.\slice'`, the exporter excludes t
 | grouped_process_io_write_bytes_total | Counter | Total number of grouped /proc/[PID]/io.write_bytes |
 | grouped_process_io_cancelled_write_bytes_total | Counter | Total number of grouped /proc/[PID]/io.cancelled_write_bytes |
 
+### Grouped /proc/[PID]/status ( `--collector.status` )
+
+| Name | Type | Description |
+| --- | --- | --- |
+| grouped_process_status_VmPeak_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmPeak. Peak virtual memory size |
+| grouped_process_status_VmSize_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmSize. Virtual memory size |
+| grouped_process_status_VmLck_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmLck. Locked memory size |
+| grouped_process_status_VmPin_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmPin. Pinned memory size |
+| grouped_process_status_VmHWM_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmHWM. Peak resident set size |
+| grouped_process_status_VmRSS_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmRSS. Resident set size (sum of RssAnnon RssFile and RssShmem) |
+| grouped_process_status_RssAnon_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.RssAnon. Size of resident anonymous memory |
+| grouped_process_status_RssFile_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.RssFile. Size of resident file mappings |
+| grouped_process_status_RssShmem_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.RssShmem. Size of resident shared memory |
+| grouped_process_status_VmData_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmData. Size of data segments |
+| grouped_process_status_VmStk_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmStk. Size of stack segments |
+| grouped_process_status_VmExe_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmExe. Size of text segments |
+| grouped_process_status_VmLib_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmLib. Shared library code size |
+| grouped_process_status_VmPTE_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmPTE. Page table entries size |
+| grouped_process_status_VmPMD_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmPMD. Size of second-level page tables |
+| grouped_process_status_VmSwap_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.VmSwap. Swapped-out virtual memory size by anonymous private |
+| grouped_process_status_HugetlbPages_bytes_total | Gauge | Total size of grouped /proc/[PID]/status.HugetlbPages. Size of hugetlb memory portions |
+| grouped_process_status_VoluntaryCtxtSwitches_total | Counter| Total number of grouped /proc/[PID]/status.VoluntaryCtxtSwitches. Number of voluntary context switches |
+| grouped_process_status_NonVoluntaryCtxtSwitches_total | Counter| Total number of grouped /proc/[PID]/status.NonVoluntaryCtxtSwitches. Number of involuntary context switches |
+
+
 ## Alternatives
 
 - [process-exporter](https://github.com/ncabatoff/process-exporter): Prometheus exporter that mines /proc to report on selected processes

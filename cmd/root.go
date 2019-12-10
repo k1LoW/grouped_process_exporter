@@ -49,14 +49,15 @@ const (
 )
 
 var (
-	address     string
-	endpoint    string
-	groupType   string
-	nReStr      string
-	eReStr      string
-	collectStat bool
-	collectIO   bool
-	subsystems  []string
+	address       string
+	endpoint      string
+	groupType     string
+	nReStr        string
+	eReStr        string
+	collectStat   bool
+	collectIO     bool
+	collectStatus bool
+	subsystems    []string
 
 	format string
 	level  string
@@ -133,6 +134,10 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 		collector.EnableMetric(metric.ProcIO)
 		log.Infoln("Enable collecting /proc/[PID]/io.")
 	}
+	if collectStatus {
+		collector.EnableMetric(metric.ProcStatus)
+		log.Infoln("Enable collecting /proc/[PID]/status.")
+	}
 
 	r := prometheus.NewRegistry()
 	r.MustRegister(promver.NewCollector("grouped_process_collector"))
@@ -180,6 +185,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&eReStr, "group.exclude", "", "", "Regexp for exclude group names. Exporter exclude group using regexp match before group name normalization")
 	rootCmd.Flags().BoolVarP(&collectStat, "collector.stat", "", false, "Enable collecting /proc/[PID]/stat.")
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
+	rootCmd.Flags().BoolVarP(&collectStatus, "collector.status", "", false, "Enable collecting /proc/[PID]/status.")
 	rootCmd.Flags().StringArrayVarP(&subsystems, "cgroup.subsystem", "", []string{}, fmt.Sprintf("Cgroup subsystem to scan. (default %s)", cgroup.DefaultSubsystems))
 
 	// copy from https://github.com/prometheus/common/blob/master/log/log.go#L57
