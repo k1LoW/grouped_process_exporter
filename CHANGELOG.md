@@ -1,3 +1,8 @@
+## [v0.7.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.6.0...v0.7.0) (2019-12-11)
+
+* Update prometheus/procfs to v0.0.8 [#24](https://github.com/k1LoW/grouped_process_exporter/pull/24) ([k1LoW](https://github.com/k1LoW))
+* Add grouped /proc/[PID]/status metrics [#23](https://github.com/k1LoW/grouped_process_exporter/pull/23) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.6.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.5.1...v0.6.0) (2019-11-14)
 
 * Resolve cgroup subsystem symlinks [#22](https://github.com/k1LoW/grouped_process_exporter/pull/22) ([k1LoW](https://github.com/k1LoW))
