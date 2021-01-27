@@ -26,6 +26,7 @@ var MetricKeys = []MetricKey{
 	ProcProcs,
 	ProcStat,
 	ProcIO,
+	ProcStatus,
 }
 
 func AvairableMetrics() map[MetricKey]Metric {
