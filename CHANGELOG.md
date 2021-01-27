@@ -1,3 +1,7 @@
+## [v0.7.1](https://github.com/k1LoW/grouped_process_exporter/compare/v0.7.0...v0.7.1) (2021-01-27)
+
+* Fix invalid memory address or nil pointer dereference when --collector.status is enabled [#25](https://github.com/k1LoW/grouped_process_exporter/pull/25) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.6.0...v0.7.0) (2019-12-11)
 
 * Update prometheus/procfs to v0.0.8 [#24](https://github.com/k1LoW/grouped_process_exporter/pull/24) ([k1LoW](https://github.com/k1LoW))
