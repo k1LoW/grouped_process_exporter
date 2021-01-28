@@ -5,6 +5,10 @@
 - control group v1 ( `cgroup`, default )
 - /proc/[PID]/status.Name: ( `proc_status_name` / `name` )
 
+### Default port
+
+- [`9644`](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)
+
 ### :unlock: Advanced grouping
 
 #### `--group.normalize`
