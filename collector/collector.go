@@ -104,5 +104,5 @@ func detectOpenFileLimit() (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return limits.OpenFiles, nil
+	return int64(limits.OpenFiles), nil
 }
