@@ -40,6 +40,20 @@ func NewGroupedProc(enabled map[metric.MetricKey]bool) *GroupedProc {
 	return &g
 }
 
+func (g *GroupedProc) Collect(key string) error {
+	for _, k := range metric.MetricKeys {
+		if g.Enabled[k] {
+			g.Lock()
+			err := g.Metrics[k].Collect(key)
+			g.Unlock()
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func (g *GroupedProc) AppendProcAndCollect(pid int) error {
 	fs, err := procfs.NewFS(g.ProcMountPoint)
 	if err != nil {

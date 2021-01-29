@@ -118,6 +118,10 @@ func (m *ProcStatusMetric) String() string {
 	return "proc_status"
 }
 
+func (m *ProcStatusMetric) Collect(k string) error {
+	return nil
+}
+
 func (m *ProcStatusMetric) CollectFromProc(proc procfs.Proc) error {
 	status, err := proc.NewStatus()
 	if err != nil {

@@ -32,6 +32,7 @@ For example, by setting `--group.exclude='user.\slice'`, the exporter excludes t
 | Name | Type | Description |
 | --- | --- | --- |
 | grouped_process_num_procs | Gauge | Number of processes in the group |
+| grouped_process_num_grouped | Gauge | Number of grouped |
 
 ### Grouped /proc/[PID]/stat ( `--collector.stat` )
 

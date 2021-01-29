@@ -38,8 +38,8 @@ var DefaultSubsystems = []string{
 type Cgroup struct {
 	fsPath     string
 	subsystems []string
-	nRe        *regexp.Regexp
-	eRe        *regexp.Regexp
+	nRe        *regexp.Regexp // normalize regexp
+	eRe        *regexp.Regexp // exclude regexp
 }
 
 func (c *Cgroup) Name() string {
@@ -86,8 +86,7 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			if f == nil {
 				return nil
 			}
-			err = sem.Acquire(ctx, 2)
-			if err != nil {
+			if err := sem.Acquire(ctx, 2); err != nil {
 				return err
 			}
 			defer sem.Release(2)
@@ -106,7 +105,10 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 					cPath = matches[1]
 				}
 			}
-			if cPath != "" {
+			if cPath == "" {
+				return nil
+			}
+			{
 				f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
 				if err != nil {
 					_ = f.Close()
@@ -120,6 +122,9 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 				if !ok {
 					gproc = grouped_proc.NewGroupedProc(enabled)
 					gprocs.Store(cPath, gproc)
+				}
+				if err := gproc.Collect(cPath); err != nil {
+					return err
 				}
 				gproc.Exists = true
 				reader := bufio.NewReaderSize(f, 1028)

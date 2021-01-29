@@ -58,6 +58,10 @@ func (m *ProcIOMetric) String() string {
 	return "proc_io"
 }
 
+func (m *ProcIOMetric) Collect(k string) error {
+	return nil
+}
+
 func (m *ProcIOMetric) CollectFromProc(proc procfs.Proc) error {
 	pio, err := proc.IO()
 	if err != nil {

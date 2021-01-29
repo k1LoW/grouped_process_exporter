@@ -87,6 +87,10 @@ func (m *ProcStatMetric) String() string {
 	return "proc_stat"
 }
 
+func (m *ProcStatMetric) Collect(k string) error {
+	return nil
+}
+
 func (m *ProcStatMetric) CollectFromProc(proc procfs.Proc) error {
 	stat, err := proc.Stat()
 	if err != nil {

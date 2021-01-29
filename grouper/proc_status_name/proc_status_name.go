@@ -14,8 +14,8 @@ import (
 )
 
 type ProcStatusName struct {
-	nRe            *regexp.Regexp
-	eRe            *regexp.Regexp
+	nRe            *regexp.Regexp // normalize regexp
+	eRe            *regexp.Regexp // exclude regexp
 	procMountPoint string
 }
 
@@ -76,6 +76,9 @@ func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[
 		if !ok {
 			gproc = grouped_proc.NewGroupedProc(enabled)
 			gprocs.Store(name, gproc)
+		}
+		if err := gproc.Collect(name); err != nil {
+			return err
 		}
 		gproc.Exists = true
 		wg.Add(1)
