@@ -49,15 +49,16 @@ const (
 )
 
 var (
-	address       string
-	endpoint      string
-	groupType     string
-	nReStr        string
-	eReStr        string
-	collectStat   bool
-	collectIO     bool
-	collectStatus bool
-	subsystems    []string
+	address              string
+	endpoint             string
+	groupType            string
+	nReStr               string
+	eReStr               string
+	collectStat          bool
+	collectIO            bool
+	collectStatus        bool
+	subsystems           []string
+	enableMetricDescName string
 
 	format string
 	level  string
@@ -138,6 +139,9 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 		collector.EnableMetric(metric.ProcStatus)
 		log.Infoln("Enable collecting /proc/[PID]/status.")
 	}
+	if err := collector.SetEnableMetricDescNameRegexp(enableMetricDescName); err != nil {
+		return 1, err
+	}
 
 	r := prometheus.NewRegistry()
 	r.MustRegister(promver.NewCollector("grouped_process_collector"))
@@ -187,6 +191,7 @@ func init() {
 	rootCmd.Flags().BoolVarP(&collectIO, "collector.io", "", false, "Enable collecting /proc/[PID]/io.")
 	rootCmd.Flags().BoolVarP(&collectStatus, "collector.status", "", false, "Enable collecting /proc/[PID]/status.")
 	rootCmd.Flags().StringArrayVarP(&subsystems, "cgroup.subsystem", "", []string{}, fmt.Sprintf("Cgroup subsystem to scan. (default %s)", cgroup.DefaultSubsystems))
+	rootCmd.Flags().StringVarP(&enableMetricDescName, "metric.desc", "", ".+", "Regexp for enable metric descriptor.")
 
 	// copy from https://github.com/prometheus/common/blob/master/log/log.go#L57
 	rootCmd.Flags().StringVarP(&level, "log.level", "", logrus.New().Level.String(), "Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal]")

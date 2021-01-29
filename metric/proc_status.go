@@ -175,25 +175,37 @@ func (m *ProcStatusMetric) PushCollected(ch chan<- prometheus.Metric, descs map[
 	}
 	m.Unlock()
 
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmPeak_bytes_total"], prometheus.GaugeValue, vmPeak, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmSize_bytes_total"], prometheus.GaugeValue, vmSize, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmLck_bytes_total"], prometheus.GaugeValue, vmLck, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmPin_bytes_total"], prometheus.GaugeValue, vmPin, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmHWM_bytes_total"], prometheus.GaugeValue, vmHWM, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmRSS_bytes_total"], prometheus.GaugeValue, vmRSS, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_RssAnon_bytes_total"], prometheus.GaugeValue, rssAnon, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_RssFile_bytes_total"], prometheus.GaugeValue, rssFile, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_RssShmem_bytes_total"], prometheus.GaugeValue, rssShmem, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmData_bytes_total"], prometheus.GaugeValue, vmData, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmStk_bytes_total"], prometheus.GaugeValue, vmStk, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmExe_bytes_total"], prometheus.GaugeValue, vmExe, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmLib_bytes_total"], prometheus.GaugeValue, vmLib, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmPTE_bytes_total"], prometheus.GaugeValue, vmPTE, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmPMD_bytes_total"], prometheus.GaugeValue, vmPMD, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VmSwap_bytes_total"], prometheus.GaugeValue, vmSwap, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_HugetlbPages_bytes_total"], prometheus.GaugeValue, hugetlbPages, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_VoluntaryCtxtSwitches_total"], prometheus.CounterValue, voluntaryCtxtSwitches, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_status_NonVoluntaryCtxtSwitches_total"], prometheus.CounterValue, nonVoluntaryCtxtSwitches, grouper, group)
+	values := []struct {
+		k string
+		t prometheus.ValueType
+		v float64
+	}{
+		{"grouped_process_status_VmPeak_bytes_total", prometheus.GaugeValue, vmPeak},
+		{"grouped_process_status_VmSize_bytes_total", prometheus.GaugeValue, vmSize},
+		{"grouped_process_status_VmLck_bytes_total", prometheus.GaugeValue, vmLck},
+		{"grouped_process_status_VmPin_bytes_total", prometheus.GaugeValue, vmPin},
+		{"grouped_process_status_VmHWM_bytes_total", prometheus.GaugeValue, vmHWM},
+		{"grouped_process_status_VmRSS_bytes_total", prometheus.GaugeValue, vmRSS},
+		{"grouped_process_status_RssAnon_bytes_total", prometheus.GaugeValue, rssAnon},
+		{"grouped_process_status_RssFile_bytes_total", prometheus.GaugeValue, rssFile},
+		{"grouped_process_status_RssShmem_bytes_total", prometheus.GaugeValue, rssShmem},
+		{"grouped_process_status_VmData_bytes_total", prometheus.GaugeValue, vmData},
+		{"grouped_process_status_VmStk_bytes_total", prometheus.GaugeValue, vmStk},
+		{"grouped_process_status_VmExe_bytes_total", prometheus.GaugeValue, vmExe},
+		{"grouped_process_status_VmLib_bytes_total", prometheus.GaugeValue, vmLib},
+		{"grouped_process_status_VmPTE_bytes_total", prometheus.GaugeValue, vmPTE},
+		{"grouped_process_status_VmPMD_bytes_total", prometheus.GaugeValue, vmPMD},
+		{"grouped_process_status_VmSwap_bytes_total", prometheus.GaugeValue, vmSwap},
+		{"grouped_process_status_HugetlbPages_bytes_total", prometheus.GaugeValue, hugetlbPages},
+		{"grouped_process_status_VoluntaryCtxtSwitches_total", prometheus.CounterValue, voluntaryCtxtSwitches},
+		{"grouped_process_status_NonVoluntaryCtxtSwitches_total", prometheus.CounterValue, nonVoluntaryCtxtSwitches},
+	}
+
+	for _, s := range values {
+		if d, ok := descs[s.k]; ok {
+			ch <- prometheus.MustNewConstMetric(d, s.t, s.v, grouper, group)
+		}
+	}
 
 	return nil
 }

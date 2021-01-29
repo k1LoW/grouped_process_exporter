@@ -128,18 +128,30 @@ func (m *ProcStatMetric) PushCollected(ch chan<- prometheus.Metric, descs map[st
 	}
 	m.Unlock()
 
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_minflt_total"], prometheus.CounterValue, minFlt, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_cminflt_total"], prometheus.CounterValue, cMinFlt, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_majflt_total"], prometheus.CounterValue, majFlt, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_cmajflt_total"], prometheus.CounterValue, cMajFlt, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_utime_total"], prometheus.CounterValue, uTime, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_stime_total"], prometheus.CounterValue, sTime, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_cutime_total"], prometheus.CounterValue, cUTime, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_cstime_total"], prometheus.CounterValue, cSTime, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_numthreads"], prometheus.GaugeValue, numThreads, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_vsize_bytes"], prometheus.GaugeValue, vSize, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_rss"], prometheus.GaugeValue, rss, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_stat_clk_tck"], prometheus.GaugeValue, m.clkTck, grouper, group)
+	values := []struct {
+		k string
+		t prometheus.ValueType
+		v float64
+	}{
+		{"grouped_process_stat_minflt_total", prometheus.CounterValue, minFlt},
+		{"grouped_process_stat_cminflt_total", prometheus.CounterValue, cMinFlt},
+		{"grouped_process_stat_majflt_total", prometheus.CounterValue, majFlt},
+		{"grouped_process_stat_cmajflt_total", prometheus.CounterValue, cMajFlt},
+		{"grouped_process_stat_utime_total", prometheus.CounterValue, uTime},
+		{"grouped_process_stat_stime_total", prometheus.CounterValue, sTime},
+		{"grouped_process_stat_cutime_total", prometheus.CounterValue, cUTime},
+		{"grouped_process_stat_cstime_total", prometheus.CounterValue, cSTime},
+		{"grouped_process_stat_numthreads", prometheus.GaugeValue, numThreads},
+		{"grouped_process_stat_vsize_bytes", prometheus.GaugeValue, vSize},
+		{"grouped_process_stat_rss", prometheus.GaugeValue, rss},
+		{"grouped_process_stat_clk_tck", prometheus.GaugeValue, m.clkTck},
+	}
+
+	for _, s := range values {
+		if d, ok := descs[s.k]; ok {
+			ch <- prometheus.MustNewConstMetric(d, s.t, s.v, grouper, group)
+		}
+	}
 
 	return nil
 }
