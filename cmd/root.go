@@ -27,7 +27,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"time"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
@@ -41,11 +40,6 @@ import (
 	promver "github.com/prometheus/common/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-)
-
-const (
-	srvReadTimeout  = 10 * time.Second
-	srvWriteTimeout = 5 * time.Second
 )
 
 var (
@@ -150,9 +144,7 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	}
 
 	srv := &http.Server{
-		Addr:         address,
-		ReadTimeout:  srvReadTimeout,
-		WriteTimeout: srvWriteTimeout,
+		Addr: address,
 	}
 
 	handler := promhttp.HandlerFor(
