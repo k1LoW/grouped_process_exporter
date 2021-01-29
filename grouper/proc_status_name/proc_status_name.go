@@ -14,8 +14,8 @@ import (
 )
 
 type ProcStatusName struct {
-	nRe            *regexp.Regexp
-	eRe            *regexp.Regexp
+	nRe            *regexp.Regexp // normalize regexp
+	eRe            *regexp.Regexp // exclude regexp
 	procMountPoint string
 }
 
