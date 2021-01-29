@@ -1,3 +1,10 @@
+## [v0.8.0](https://github.com/k1LoW/grouped_process_exporter/compare/v0.7.1...v0.8.0) (2021-01-29)
+
+* Remove timeout for http server. [#29](https://github.com/k1LoW/grouped_process_exporter/pull/29) ([k1LoW](https://github.com/k1LoW))
+* Add default metrics `grouped_process_num_grouped` ( Number of grouped ) [#28](https://github.com/k1LoW/grouped_process_exporter/pull/28) ([k1LoW](https://github.com/k1LoW))
+* Add --metric.desc to filter metric descriptor [#27](https://github.com/k1LoW/grouped_process_exporter/pull/27) ([k1LoW](https://github.com/k1LoW))
+* Bump up go and pkg version [#26](https://github.com/k1LoW/grouped_process_exporter/pull/26) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.1](https://github.com/k1LoW/grouped_process_exporter/compare/v0.7.0...v0.7.1) (2021-01-27)
 
 * Fix invalid memory address or nil pointer dereference when --collector.status is enabled [#25](https://github.com/k1LoW/grouped_process_exporter/pull/25) ([k1LoW](https://github.com/k1LoW))
