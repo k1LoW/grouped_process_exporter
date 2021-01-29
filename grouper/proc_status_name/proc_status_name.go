@@ -77,7 +77,9 @@ func (g *ProcStatusName) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[
 			gproc = grouped_proc.NewGroupedProc(enabled)
 			gprocs.Store(name, gproc)
 		}
-		gproc.Collect(name)
+		if err := gproc.Collect(name); err != nil {
+			return err
+		}
 		gproc.Exists = true
 		wg.Add(1)
 		_ = sem.Acquire(ctx, gproc.RequiredWeight)

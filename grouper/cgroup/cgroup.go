@@ -123,7 +123,9 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 					gproc = grouped_proc.NewGroupedProc(enabled)
 					gprocs.Store(cPath, gproc)
 				}
-				gproc.Collect(cPath)
+				if err := gproc.Collect(cPath); err != nil {
+					return err
+				}
 				gproc.Exists = true
 				reader := bufio.NewReaderSize(f, 1028)
 				for {
