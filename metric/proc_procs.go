@@ -28,6 +28,10 @@ func (m *ProcProcsMetric) String() string {
 	return "proc_count"
 }
 
+func (m *ProcProcsMetric) Collect(k string) error {
+	return nil
+}
+
 func (m *ProcProcsMetric) CollectFromProc(proc procfs.Proc) error {
 	m.Lock()
 	m.metrics[proc.PID] = struct{}{}

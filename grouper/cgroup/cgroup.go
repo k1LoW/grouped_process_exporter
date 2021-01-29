@@ -86,8 +86,7 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			if f == nil {
 				return nil
 			}
-			err = sem.Acquire(ctx, 2)
-			if err != nil {
+			if err := sem.Acquire(ctx, 2); err != nil {
 				return err
 			}
 			defer sem.Release(2)
@@ -109,46 +108,49 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			if cPath == "" {
 				return nil
 			}
-			f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
-			if err != nil {
-				_ = f.Close()
-				return nil
-			}
-			var (
-				gproc *grouped_proc.GroupedProc
-				ok    bool
-			)
-			gproc, ok = gprocs.Load(cPath)
-			if !ok {
-				gproc = grouped_proc.NewGroupedProc(enabled)
-				gprocs.Store(cPath, gproc)
-			}
-			gproc.Exists = true
-			reader := bufio.NewReaderSize(f, 1028)
-			for {
-				line, _, err := reader.ReadLine()
-				if err == io.EOF {
-					break
-				} else if err != nil {
-					_ = f.Close()
-					return err
-				}
-				pid, err := strconv.Atoi(string(line))
+			{
+				f, err := os.Open(filepath.Clean(filepath.Join(path, "cgroup.procs")))
 				if err != nil {
 					_ = f.Close()
-					return err
+					return nil
 				}
-				err = sem.Acquire(ctx, gproc.RequiredWeight)
-				if err != nil {
-					_ = f.Close()
-					return err
+				var (
+					gproc *grouped_proc.GroupedProc
+					ok    bool
+				)
+				gproc, ok = gprocs.Load(cPath)
+				if !ok {
+					gproc = grouped_proc.NewGroupedProc(enabled)
+					gprocs.Store(cPath, gproc)
 				}
-				wg.Add(1)
-				go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
-					_ = gproc.AppendProcAndCollect(pid)
-					sem.Release(gproc.RequiredWeight)
-					wg.Done()
-				}(wg, pid, gproc)
+				gproc.Collect(cPath)
+				gproc.Exists = true
+				reader := bufio.NewReaderSize(f, 1028)
+				for {
+					line, _, err := reader.ReadLine()
+					if err == io.EOF {
+						break
+					} else if err != nil {
+						_ = f.Close()
+						return err
+					}
+					pid, err := strconv.Atoi(string(line))
+					if err != nil {
+						_ = f.Close()
+						return err
+					}
+					err = sem.Acquire(ctx, gproc.RequiredWeight)
+					if err != nil {
+						_ = f.Close()
+						return err
+					}
+					wg.Add(1)
+					go func(wg *sync.WaitGroup, pid int, gproc *grouped_proc.GroupedProc) {
+						_ = gproc.AppendProcAndCollect(pid)
+						sem.Release(gproc.RequiredWeight)
+						wg.Done()
+					}(wg, pid, gproc)
+				}
 			}
 			return nil
 		})
