@@ -92,13 +92,25 @@ func (m *ProcIOMetric) PushCollected(ch chan<- prometheus.Metric, descs map[stri
 	}
 	m.Unlock()
 
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_r_char_total"], prometheus.CounterValue, rChar, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_w_char_total"], prometheus.CounterValue, wChar, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_r_total"], prometheus.CounterValue, syscR, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_sysc_w_total"], prometheus.CounterValue, syscW, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_read_bytes_total"], prometheus.CounterValue, readBytes, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_write_bytes_total"], prometheus.CounterValue, writeBytes, grouper, group)
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_io_cancelled_write_bytes_total"], prometheus.CounterValue, cancelledWriteBytes, grouper, group)
+	values := []struct {
+		k string
+		t prometheus.ValueType
+		v float64
+	}{
+		{"grouped_process_io_r_char_total", prometheus.CounterValue, rChar},
+		{"grouped_process_io_w_char_total", prometheus.CounterValue, wChar},
+		{"grouped_process_io_sysc_r_total", prometheus.CounterValue, syscR},
+		{"grouped_process_io_sysc_w_total", prometheus.CounterValue, syscW},
+		{"grouped_process_io_read_bytes_total", prometheus.CounterValue, readBytes},
+		{"grouped_process_io_write_bytes_total", prometheus.CounterValue, writeBytes},
+		{"grouped_process_io_cancelled_write_bytes_total", prometheus.CounterValue, cancelledWriteBytes},
+	}
+
+	for _, s := range values {
+		if d, ok := descs[s.k]; ok {
+			ch <- prometheus.MustNewConstMetric(d, s.t, s.v, grouper, group)
+		}
+	}
 
 	return nil
 }

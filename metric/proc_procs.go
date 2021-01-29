@@ -37,7 +37,9 @@ func (m *ProcProcsMetric) CollectFromProc(proc procfs.Proc) error {
 
 func (m *ProcProcsMetric) PushCollected(ch chan<- prometheus.Metric, descs map[string]*prometheus.Desc, grouper string, group string) error {
 	m.Lock()
-	ch <- prometheus.MustNewConstMetric(descs["grouped_process_num_procs"], prometheus.GaugeValue, float64(len(m.metrics)), grouper, group)
+	if d, ok := descs["grouped_process_num_procs"]; ok {
+		ch <- prometheus.MustNewConstMetric(d, prometheus.GaugeValue, float64(len(m.metrics)), grouper, group)
+	}
 	m.metrics = make(map[int]struct{}) // clear
 	m.Unlock()
 	return nil

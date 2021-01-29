@@ -2,6 +2,7 @@ package collector
 
 import (
 	"os"
+	"regexp"
 	"runtime"
 	"sync"
 
@@ -18,12 +19,13 @@ const openFileBuffer = 50
 
 type GroupedProcCollector struct {
 	sync.Mutex
-	GroupedProcs *grouped_proc.GroupedProcs
-	Metrics      map[metric.MetricKey]metric.Metric
-	Enabled      map[metric.MetricKey]bool
-	Grouper      grouper.Grouper
-	descs        map[string]*prometheus.Desc
-	sem          *semaphore.Weighted
+	GroupedProcs           *grouped_proc.GroupedProcs
+	Metrics                map[metric.MetricKey]metric.Metric
+	Enabled                map[metric.MetricKey]bool
+	Grouper                grouper.Grouper
+	enableMetricDescNameRe *regexp.Regexp
+	descs                  map[string]*prometheus.Desc
+	sem                    *semaphore.Weighted
 }
 
 func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
@@ -31,8 +33,10 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 		if c.Enabled[key] {
 			descs := c.Metrics[key].Describe()
 			for name, desc := range descs {
-				c.descs[name] = desc
-				ch <- desc
+				if c.enableMetricDescNameRe.MatchString(name) {
+					c.descs[name] = desc
+					ch <- desc
+				}
 			}
 		}
 	}
@@ -72,6 +76,15 @@ func (c *GroupedProcCollector) EnableMetric(metric metric.MetricKey) {
 
 func (c *GroupedProcCollector) DisableMetric(metric metric.MetricKey) {
 	c.Enabled[metric] = false
+}
+
+func (c *GroupedProcCollector) SetEnableMetricDescNameRegexp(s string) error {
+	re, err := regexp.Compile(s)
+	if err != nil {
+		return err
+	}
+	c.enableMetricDescNameRe = re
+	return nil
 }
 
 // NewGroupedProcCollector
