@@ -30,7 +30,7 @@ changelog:
 nfpms:
   -
     id: gpe-nfpms
-    name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
     - gpe-linux
     homepage: https://github.com/k1LoW/grouped_process_exporter
