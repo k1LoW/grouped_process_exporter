@@ -1,3 +1,4 @@
+version: 2
 before:
   hooks:
     - go mod download
@@ -11,6 +12,7 @@ builds:
     - linux
   goarch:
     - amd64
+    - arm64
   ldflags:
     - -s -w -X github.com/k1LoW/grouped_process_exporter.version={{.Version}} -X github.com/k1LoW/grouped_process_exporter.commit={{.FullCommit}} -X github.com/k1LoW/grouped_process_exporter.date={{.Date}} -X github.com/k1LoW/grouped_process_exporter/version.Version={{.Version}}
 archives:
@@ -25,8 +27,6 @@ checksum:
   name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Version }}-next"
-changelog:
-  skip: true
 nfpms:
   -
     id: gpe-nfpms
