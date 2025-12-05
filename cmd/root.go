@@ -27,6 +27,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
 	"github.com/k1LoW/grouped_process_exporter/grouper"
@@ -143,7 +144,8 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	}
 
 	srv := &http.Server{
-		Addr: address,
+		Addr:              address,
+		ReadHeaderTimeout: 10 * time.Second,
 	}
 
 	handler := promhttp.HandlerFor(

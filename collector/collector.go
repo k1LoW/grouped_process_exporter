@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"math"
 	"os"
 	"regexp"
 	"runtime"
@@ -117,5 +118,9 @@ func detectOpenFileLimit() (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return int64(limits.OpenFiles), nil
+	openFiles := limits.OpenFiles
+	if openFiles > uint64(math.MaxInt64) {
+		openFiles = uint64(math.MaxInt64)
+	}
+	return int64(openFiles), nil // #nosec G115
 }
