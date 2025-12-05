@@ -24,8 +24,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/k1LoW/grouped_process_exporter/collector"
@@ -35,9 +35,8 @@ import (
 	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/k1LoW/grouped_process_exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/prometheus/common/log"
-	promver "github.com/prometheus/common/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -76,21 +75,21 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		baseLogger := log.Base()
-		err := baseLogger.SetLevel(level)
+		lvl, err := logrus.ParseLevel(level)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		} else {
+			logrus.SetLevel(lvl)
 		}
-		err = baseLogger.SetFormat(format)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		if format == "json" {
+			logrus.SetFormatter(&logrus.JSONFormatter{})
 		}
 
 		status, err := runRoot(args, address, endpoint, groupType, nReStr, eReStr, collectStat, collectIO)
 		if err != nil {
-			log.Fatalln(err)
+			logrus.Fatalln(err)
 		}
-		log.Infoln("Stopped grouped_process_exporter")
+		logrus.Infoln("Stopped grouped_process_exporter")
 		os.Exit(status)
 	},
 }
@@ -99,11 +98,11 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	var g grouper.Grouper
 	switch groupType {
 	case "cgroup":
-		log.Infoln("Select cgroup grouper")
+		logrus.Infoln("Select cgroup grouper")
 		fsPath := "/sys/fs/cgroup"
 		g = cgroup.NewCgroup(fsPath, subsystems)
 	case "proc_status_name", "name":
-		log.Infoln("Select proc_status_name grouper")
+		logrus.Infoln("Select proc_status_name grouper")
 		g = proc_status_name.NewProcStatusName()
 	default:
 		return 1, errors.New("invalid grouping type")
@@ -123,22 +122,22 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	}
 	if collectStat {
 		collector.EnableMetric(metric.ProcStat)
-		log.Infoln("Enable collecting /proc/[PID]/stat.")
+		logrus.Infoln("Enable collecting /proc/[PID]/stat.")
 	}
 	if collectIO {
 		collector.EnableMetric(metric.ProcIO)
-		log.Infoln("Enable collecting /proc/[PID]/io.")
+		logrus.Infoln("Enable collecting /proc/[PID]/io.")
 	}
 	if collectStatus {
 		collector.EnableMetric(metric.ProcStatus)
-		log.Infoln("Enable collecting /proc/[PID]/status.")
+		logrus.Infoln("Enable collecting /proc/[PID]/status.")
 	}
 	if err := collector.SetEnableMetricDescNameRegexp(enableMetricDescName); err != nil {
 		return 1, err
 	}
 
 	r := prometheus.NewRegistry()
-	r.MustRegister(promver.NewCollector("grouped_process_collector"))
+	r.MustRegister(collectors.NewBuildInfoCollector())
 	if err := r.Register(collector); err != nil {
 		return 1, fmt.Errorf("couldn't register grouped_process_collector: %s", err)
 	}
@@ -150,7 +149,7 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	handler := promhttp.HandlerFor(
 		prometheus.Gatherers{r},
 		promhttp.HandlerOpts{
-			ErrorLog:            log.NewErrorLogger(),
+			ErrorLog:            log.New(logrus.StandardLogger().Writer(), "", 0),
 			ErrorHandling:       promhttp.ContinueOnError,
 			MaxRequestsInFlight: 10,
 			Registry:            r,
@@ -158,8 +157,8 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 	)
 
 	http.Handle(endpoint, handler)
-	log.Infoln("Starting grouped_process_exporter", version.Version)
-	log.Infoln(fmt.Sprintf("Listening on %s%s", address, endpoint))
+	logrus.Infoln("Starting grouped_process_exporter", version.Version)
+	logrus.Infoln(fmt.Sprintf("Listening on %s%s", address, endpoint))
 	if err := srv.ListenAndServe(); err != nil {
 		return 1, err
 	}
@@ -168,7 +167,7 @@ func runRoot(args []string, address, endpoint, groupType, nReStr, eReStr string,
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatalln(err)
+		logrus.Fatalln(err)
 		os.Exit(1)
 	}
 }
@@ -185,10 +184,8 @@ func init() {
 	rootCmd.Flags().StringArrayVarP(&subsystems, "cgroup.subsystem", "", []string{}, fmt.Sprintf("Cgroup subsystem to scan. (default %s)", cgroup.DefaultSubsystems))
 	rootCmd.Flags().StringVarP(&enableMetricDescName, "metric.desc", "", ".+", "Regexp for enable metric descriptor.")
 
-	// copy from https://github.com/prometheus/common/blob/master/log/log.go#L57
 	rootCmd.Flags().StringVarP(&level, "log.level", "", logrus.New().Level.String(), "Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal]")
-	defaultFormat := url.URL{Scheme: "logger", Opaque: "stderr"}
-	rootCmd.Flags().StringVarP(&format, "log.format", "", defaultFormat.String(), `Set the log target and format. Example: "logger:syslog?appname=bob&local=7" or "logger:stdout?json=true"`)
+	rootCmd.Flags().StringVarP(&format, "log.format", "", "text", `Set the log format. Valid formats: [text, json]`)
 
 	rootCmd.Flags().BoolP("version", "v", false, "print the version")
 }

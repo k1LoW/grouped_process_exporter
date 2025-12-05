@@ -14,7 +14,7 @@ import (
 
 	"github.com/k1LoW/grouped_process_exporter/grouped_proc"
 	"github.com/k1LoW/grouped_process_exporter/metric"
-	"github.com/prometheus/common/log"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -51,13 +51,13 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	log.Debugf("Cgroup subsystems %s\n", c.subsystems)
+	logrus.Debugf("Cgroup subsystems %s\n", c.subsystems)
 	realSubsystems := []string{}
 	for _, s := range c.subsystems {
 		path := filepath.Clean(filepath.Join(c.fsPath, s))
 		f, err := os.Lstat(path)
 		if err != nil {
-			log.Debugf("%s\n", err)
+			logrus.Debugf("%s\n", err)
 			continue
 		}
 		if f.Mode()&os.ModeSymlink == os.ModeSymlink {
@@ -75,7 +75,7 @@ func (c *Cgroup) Collect(gprocs *grouped_proc.GroupedProcs, enabled map[metric.M
 			realSubsystems = append(realSubsystems, filepath.Base(path))
 		}
 	}
-	log.Debugf("Resolve symlinks %s\n", realSubsystems)
+	logrus.Debugf("Resolve symlinks %s\n", realSubsystems)
 
 	for _, s := range realSubsystems {
 		searchDir := filepath.Clean(filepath.Join(c.fsPath, s))

@@ -10,8 +10,8 @@ import (
 	"github.com/k1LoW/grouped_process_exporter/grouper"
 	"github.com/k1LoW/grouped_process_exporter/metric"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/common/log"
 	"github.com/prometheus/procfs"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -44,20 +44,20 @@ func (c *GroupedProcCollector) Describe(ch chan<- *prometheus.Desc) {
 
 func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 	c.Lock()
-	log.Debugln("Start collecting")
+	logrus.Debugln("Start collecting")
 	_ = c.Grouper.Collect(c.GroupedProcs, c.Enabled, c.sem)
 	c.GroupedProcs.Range(func(group string, gproc *grouped_proc.GroupedProc) bool {
-		log.Debugf("Collect grouped process: %s\n", group)
+		logrus.Debugf("Collect grouped process: %s\n", group)
 		if !gproc.Exists {
 			c.GroupedProcs.Delete(group)
-			log.Debugf("Delete grouped process: %s\n", group)
+			logrus.Debugf("Delete grouped process: %s\n", group)
 			return true
 		}
 		for key, metric := range gproc.Metrics {
 			if gproc.Enabled[key] {
 				err := metric.PushCollected(ch, c.descs, c.Grouper.Name(), group)
 				if err != nil {
-					log.Errorf("Failed to push collected metrics: %v\n", err)
+					logrus.Errorf("Failed to push collected metrics: %v\n", err)
 					// TODO: metric.PushDefaultMetric(ch, c.descs, c.Grouper.Name(), group)
 					return true
 				}
@@ -66,7 +66,7 @@ func (c *GroupedProcCollector) Collect(ch chan<- prometheus.Metric) {
 		gproc.Exists = false
 		return true
 	})
-	log.Debugln("Collecting finished")
+	logrus.Debugln("Collecting finished")
 	c.Unlock()
 }
 
